@@ -12,8 +12,8 @@ export class TokenProvider {
                 tokens.authToken,
                 tokens.refreshToken
             );
-            localStorage.setItem("authJwt", tokens.authToken);
-            localStorage.setItem("refreshJwt", tokens.refreshToken);
+           localStorage.setItem("authJwt", tokens.authToken);
+           localStorage.setItem("refreshJwt", tokens.refreshToken);
         }
         if (!this.instance) {
             const jwt = localStorage.getItem("authJwt");
