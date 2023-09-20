@@ -1,24 +1,26 @@
 import { Button, Container } from "@chakra-ui/react";
 import axios from "axios";
-import { LoaderFunctionArgs, json, useLoaderData } from "react-router-dom";
+import { LoaderFunctionArgs, json } from "react-router-dom";
 import { JwtResponse } from "../models/auth/JwtResponse";
 import { TokenProvider } from "../utils/TokenProvider";
 import { LoaderData } from "../models/auth/LoaderData";
 import { AuthWrapper } from "../components/utils/AuthWrapper";
+import { useGetCurrentMemberQuery } from "../services/guild";
 
 export const HomePage = () => {
-    const loaderData = useLoaderData() as LoaderData<string | null>;
-    const userDetails = loaderData.data;
-    
+    const { data, error, isLoading } = useGetCurrentMemberQuery()
+    console.log(data)
+    console.log(error)
+    console.log(isLoading)
     return (
         <AuthWrapper>
             <Container>
-                {!userDetails && (
+                {!false && (
                     <Button onClick={openDiscordAuthWindow}>
                         Login with discord
                     </Button>
                 )}
-                {userDetails && <p>{userDetails}</p>}
+                {false && <p>{"test"}</p>}
             </Container>
         </AuthWrapper>
     );
@@ -41,21 +43,21 @@ export async function loader({
         TokenProvider.getInstance(data);
     }
 
-    const token = await TokenProvider.getToken();
-    if (!!token) {
-        const response = await axios.get(
-            `${process.env.REACT_APP_KAIRON_API_URL}/guild/current/member`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (response.status === 200) {
-            const jsonData = new LoaderData(
-                token,
-                JSON.stringify(response.data)
-            );
-            return json(jsonData, { status: 200 });
-        }
-        return json(null, { status: response.status });
-    }
+    // const token = await TokenProvider.getToken();
+    // if (!!token) {
+    //     const response = await axios.get(
+    //         `${process.env.REACT_APP_KAIRON_API_URL}/guild/current/member`,
+    //         { headers: { Authorization: `Bearer ${token}` } }
+    //     );
+    //     if (response.status === 200) {
+    //         const jsonData = new LoaderData(
+    //             token,
+    //             JSON.stringify(response.data)
+    //         );
+    //         return json(jsonData, { status: 200 });
+    //     }
+    //     return json(null, { status: response.status });
+    // }
     return json(new LoaderData(undefined, null), { status: 200 });
 }
 

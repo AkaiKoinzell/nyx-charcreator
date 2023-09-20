@@ -6,13 +6,17 @@ export const guildApi = createApi({
     baseQuery: fetchBaseQuery({ 
         baseUrl: `${process.env.REACT_APP_KAIRON_API_URL}/guild/`,
         prepareHeaders: async (headers, api) => {
-            await TokenProvider.getToken()
+            const token = await TokenProvider.getToken()
+            headers.set("Authorization", `Bearer ${token}`)
+            throw Error("Ok")
         },
     
     }),
     endpoints: (builder) => ({
-        getCurrentMembder: builder.query<any, null>({
+        getCurrentMember: builder.query<any, void>({
             query: () => "current/member"
         })
     })
 })
+
+export const { useGetCurrentMemberQuery } = guildApi
