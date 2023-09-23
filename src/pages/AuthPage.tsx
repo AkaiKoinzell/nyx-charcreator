@@ -11,6 +11,7 @@ import {
     setAuthenticationState,
 } from "../store/auth/auth-slice";
 import { QueryStatus } from "@reduxjs/toolkit/dist/query";
+import { Center, Spinner, Text, VStack } from "@chakra-ui/react";
 
 export const AuthPage = () => {
     const dispatch = useAppDispatch();
@@ -53,16 +54,24 @@ export const AuthPage = () => {
     }, [code, debouncing, discordLogin, dispatch]);
 
     useEffect(() => {
-        if(status === QueryStatus.fulfilled) {
-            navigate("/user")
+        if (status === QueryStatus.fulfilled) {
+            navigate("/user");
         }
-    }, [navigate, status])
+    }, [navigate, status]);
 
     return (
-        <>
-            {(status === QueryStatus.pending || status === QueryStatus.uninitialized) && <h1>Logging in...</h1>}
+        <Center>
+            {(status === QueryStatus.pending ||
+                status === QueryStatus.uninitialized) && (
+                <VStack>
+                    <Text fontSize="4xl">Logging in...</Text>
+                    <Spinner size='xl' colorScheme='blue' speed='0.6s'/>
+                </VStack>
+            )}
             {status === QueryStatus.fulfilled && <h1>Ok</h1>}
-            {status === QueryStatus.rejected && <h1>{JSON.stringify(error)}</h1>}
-        </>
+            {status === QueryStatus.rejected && (
+                <h1>{JSON.stringify(error)}</h1>
+            )}
+        </Center>
     );
 };

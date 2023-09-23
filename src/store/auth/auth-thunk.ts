@@ -1,7 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthState, resetAuthenticationState, setAuthenticationState, setDiscordCode } from "./auth-slice";
-import axios from "axios";
-import { JwtResponse } from "../../models/auth/JwtResponse";
+import { AuthState, setAuthenticationState } from "./auth-slice";
 
 export const localStorageJwtKey = "jwt"
 export const localStorageRefreshJwtKey = "refreshJwt"
