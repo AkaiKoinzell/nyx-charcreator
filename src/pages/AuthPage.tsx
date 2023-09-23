@@ -50,8 +50,10 @@ export const AuthPage = () => {
                         dispatch(resetAuthenticationState());
                     }
                 );
+        } else {
+            navigate("/")
         }
-    }, [code, debouncing, discordLogin, dispatch]);
+    }, [code, debouncing, discordLogin, dispatch, navigate]);
 
     useEffect(() => {
         if (status === QueryStatus.fulfilled) {
