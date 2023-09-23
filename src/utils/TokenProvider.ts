@@ -13,7 +13,7 @@ export class TokenProvider {
                 tokens.authToken,
                 tokens.refreshToken
             );
-           localStorage.setItem("authJwt", tokens.authToken);
+           localStorage.setItem("jwt", tokens.authToken);
            localStorage.setItem("refreshJwt", tokens.refreshToken);
         }
         if (!this.instance) {

@@ -1,42 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthState } from "./auth-slice";
+import { AuthState, resetAuthenticationState, setAuthenticationState, setDiscordCode } from "./auth-slice";
 import axios from "axios";
 import { JwtResponse } from "../../models/auth/JwtResponse";
-import { isJwtInvalidOrExpired } from "../../utils/jwt-utils";
+
+export const localStorageJwtKey = "jwt"
+export const localStorageRefreshJwtKey = "refreshJwt"
 
 export const getToken = createAsyncThunk(
     'auth/token',
-    async (code: string | undefined, { getState } ) => {
-        if(!!code) {
-            const response = await axios.post(
-                `${process.env.REACT_APP_KAIRON_API_URL}/login/discord`,
-                { code },
-                { headers: { "Content-Type": "application/json" } }
-            );
-            if (response.status !== 200) {
-                throw new Error()
-            } else {
-                return response.data as JwtResponse;
-            }
-        }
+    async (_param: void, { getState, dispatch } ) => {
         const {
-            auth: { jwt, refreshJwt }
+            auth: { jwt }
         } = getState() as { auth: AuthState }
 
-        if(!!jwt && !isJwtInvalidOrExpired(jwt)) {
-            return { authToken: jwt, refreshToken: refreshJwt}
-        }
-
-        if(!!refreshJwt && !isJwtInvalidOrExpired(refreshJwt)) {
-            const response = await axios.post(
-                `${process.env.REACT_APP_KAIRON_API_URL}/login/refresh`,
-                null,
-                { headers: { "Refresh-Token": refreshJwt } }
-            );
-            if (response.status === 200) {
-                return response.data as JwtResponse;
+        if(!jwt) {
+            const loadedJwt = localStorage.getItem(localStorageJwtKey)
+            const refreshJwt = localStorage.getItem(localStorageRefreshJwtKey)
+            const data = { jwt: loadedJwt, refreshJwt }
+            if(!!loadedJwt) {
+                dispatch(setAuthenticationState(data))
             }
+            return data
         }
-        throw new Error();
+        
     }
 )

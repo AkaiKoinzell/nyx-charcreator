@@ -1,14 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { TokenProvider } from '../utils/TokenProvider'
+import { AuthState } from '../store/auth/auth-slice'
 
 export const guildApi = createApi({
     reducerPath: 'guildApi',
     baseQuery: fetchBaseQuery({ 
         baseUrl: `${process.env.REACT_APP_KAIRON_API_URL}/guild/`,
         prepareHeaders: async (headers, api) => {
-            const token = await TokenProvider.getToken()
-            headers.set("Authorization", `Bearer ${token}`)
-            throw Error("Ok")
+            const {
+                auth: { jwt }
+            } = api.getState() as { auth: AuthState }
+            headers.set("Authorization", `Bearer ${jwt}`)
         },
     
     }),

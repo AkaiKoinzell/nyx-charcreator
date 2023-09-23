@@ -1,13 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./auth/auth-slice";
 import { guildApi } from "../services/guild";
+import { authListenerMiddleware } from "./auth/auth-middleware";
+import { authApi } from "../services/auth";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        [guildApi.reducerPath]: guildApi.reducer
+        [guildApi.reducerPath]: guildApi.reducer,
+        [authApi.reducerPath]: authApi.reducer
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(guildApi.middleware)
+    middleware: (getDefaultMiddleware) => 
+        getDefaultMiddleware()
+            .prepend(authListenerMiddleware.middleware)
+            .concat(guildApi.middleware)
+            .concat(authApi.middleware)
 
 })
 
