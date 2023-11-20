@@ -12,6 +12,7 @@ import {
 } from "../store/auth/auth-slice";
 import { QueryStatus } from "@reduxjs/toolkit/dist/query";
 import { Center, Spinner, Text, VStack } from "@chakra-ui/react";
+import { getRolesFromJwt } from "../utils/jwt-utils";
 
 export const AuthPage = () => {
     const dispatch = useAppDispatch();
@@ -41,6 +42,7 @@ export const AuthPage = () => {
                             setAuthenticationState({
                                 jwt: data.authToken,
                                 refreshJwt: data.refreshToken,
+                                roles: getRolesFromJwt(data.authToken)
                             })
                         );
                     },

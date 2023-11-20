@@ -2,8 +2,7 @@ import { Container, Heading, VStack } from "@chakra-ui/react";
 import { CharacterCard } from "./CharacterCard";
 import { Character } from "../../models/character/Character";
 
-export const CharacterList = ({ characters }: { characters: Character[] }) => {
-    const x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 0];
+export const CharacterList = ({ characters }: { characters: Character<string>[] }) => {
     return (
         <VStack spacing="2rem">
             <Container>
@@ -12,9 +11,7 @@ export const CharacterList = ({ characters }: { characters: Character[] }) => {
             <VStack spacing="2rem">
                 {!!characters &&
                     characters.map((it) =>
-                        x.map((itt) => 
-                            <CharacterCard key={itt} character={it} />
-                        )
+                        <CharacterCard key={it.id} character={it} />
                     )}
             </VStack>
         </VStack>

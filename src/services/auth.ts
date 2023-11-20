@@ -6,16 +6,20 @@ export const authApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.REACT_APP_KAIRON_API_URL}`,
         prepareHeaders: (headers) => {
+            headers.set("Access-Control-Allow-Origin", "*");
             headers.set("Content-Type", "application/json");
         },
     }),
     endpoints: (builder) => ({
         discordLogin: builder.mutation<JwtResponse, string>({
             query: (code) => ({
-                url: `/login/discord`,
+                url: `/auth/discord`,
                 method: "POST",
                 body: JSON.stringify({ code }),
-                headers: { "Content-type": "application/json" },
+                headers: {
+                     "Content-type": "application/json",
+                     "Access-Control-Allow-Origin": "*"
+                },
             }),
         }),
     }),

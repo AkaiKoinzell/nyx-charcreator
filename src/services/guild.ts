@@ -10,6 +10,7 @@ export const guildApi = createApi({
                 auth: { jwt },
             } = api.getState() as { auth: AuthState };
             headers.set("Authorization", `Bearer ${jwt}`);
+            headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
     endpoints: (builder) => ({

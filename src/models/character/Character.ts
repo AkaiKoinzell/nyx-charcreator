@@ -1,14 +1,15 @@
+import { LabelStub } from "../label/LabelStub";
 import { Building } from "./Building";
 import { Errata } from "./Errata";
 import { Proficiency } from "./Proficiency";
 
-export interface Character {
+export interface Character<P> {
     id: string;
     name: string;
-    player: string;
     race: string;
+    player: P;
     territory: string;
-    class: string;
+    class: string[];
     status: string;
     masterMS: number;
     PBCMS: number;
@@ -16,7 +17,7 @@ export interface Character {
     sessionMS: number;
     errata: Errata[];
     created: number;
-    lastPlayed: number;
+    lastPlayed: number | null;
     lastMastered: number | null;
     age: number;
     buildings: {
@@ -26,6 +27,7 @@ export interface Character {
     languages: Proficiency[];
     money: number;
     proficiencies: Proficiency[];
+    labels: LabelStub[];
 }
 
-export const exp = (c: Character) => c.masterMS + c.PBCMS + c.errataMS + c.sessionMS
+export const exp = (c: Character<any>) => c.masterMS + c.PBCMS + c.errataMS + c.sessionMS

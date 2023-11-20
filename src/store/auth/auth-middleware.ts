@@ -4,7 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 import { resetAuthenticationState, setAuthenticationState } from "./auth-slice";
 import { AppDispatch, RootState } from "..";
-import { getJwtExpirationMillis, isJwtInvalidOrExpired } from "../../utils/jwt-utils";
+import { getJwtExpirationMillis, getRolesFromJwt, isJwtInvalidOrExpired } from "../../utils/jwt-utils";
 import axios, { AxiosResponse } from "axios";
 import { JwtResponse } from "../../models/auth/JwtResponse";
 import { localStorageJwtKey, localStorageRefreshJwtKey } from "./auth-thunk";
@@ -27,14 +27,15 @@ startAuthListening({
 
         if(!!refreshJwt && !isJwtInvalidOrExpired(refreshJwt)) {
             await axios.post(
-                `${process.env.REACT_APP_KAIRON_API_URL}/login/refresh`,
+                `${process.env.REACT_APP_KAIRON_API_URL}/auth/refresh`,
                 null,
-                { headers: { "Refresh-Token": refreshJwt } }
+                { headers: { "Authentication": `Bearer ${refreshJwt}` } }
             ).then( 
                 (response: AxiosResponse<JwtResponse, any>) => {
                     listenerApi.dispatch(setAuthenticationState({ 
                         jwt: response.data.authToken, 
-                        refreshJwt: response.data.refreshToken 
+                        refreshJwt: response.data.refreshToken ,
+                        roles: getRolesFromJwt(response.data.authToken)
                     }))
                 },
                 () => {

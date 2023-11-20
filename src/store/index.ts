@@ -18,7 +18,6 @@ export const store = configureStore({
             .concat(guildApi.middleware)
             .concat(authApi.middleware)
             .concat(characterApi.middleware)
-
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

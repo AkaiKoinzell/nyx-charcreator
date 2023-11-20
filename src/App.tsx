@@ -5,6 +5,7 @@ import { MainMenu } from './pages/layouts/MainMenu';
 import { CharacterPage } from './pages/CharacterPage';
 import { AuthenticatedLayout } from './pages/layouts/AuthenticatedLayout';
 import { AuthPage } from './pages/AuthPage';
+import { InsertSessionPage } from './pages/sessions/InsertSessionPage';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,14 @@ const router = createBrowserRouter([
         path: "user",
         element: <AuthenticatedLayout />,
         children : [
-          {index: true, element: <CharacterPage />}
+          { index: true, element: <CharacterPage /> }
+        ]
+      },
+      {
+        path: "session",
+        element: <AuthenticatedLayout />,
+        children: [
+          { path: "insert", element: <InsertSessionPage /> }
         ]
       }
     ],

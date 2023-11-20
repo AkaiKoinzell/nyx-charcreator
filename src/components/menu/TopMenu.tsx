@@ -1,6 +1,8 @@
 import {  Flex } from "@chakra-ui/react";
+import { SessionButton } from "./buttons/SessionButton";
+import { Roles } from "../../utils/jwt-utils";
 
-export const TopMenu = () => {
+export const TopMenu = ({ roles }: { roles: Roles[]}) => {
     return (
         <Flex
             as="header"
@@ -9,7 +11,10 @@ export const TopMenu = () => {
             position="fixed"
             zIndex="sticky"
             background="rgb(255, 255, 255, 0.7)"
+            pl="30vw"
             backdropFilter="saturate(180%) blur(5px)"
-        ></Flex>
+        >
+            { roles.includes(Roles.MANAGE_SESIONS) && <SessionButton /> }
+        </Flex>
     );
 };

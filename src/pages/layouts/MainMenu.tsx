@@ -1,29 +1,16 @@
 import { Outlet } from "react-router-dom";
-import { AvatarButton } from "../../components/ui/AvatarButton";
-import { Box, Flex, useDisclosure } from "@chakra-ui/react";
-import { MenuDrawer } from "../../components/menu/MenuDrawer";
+import { Box, Flex } from "@chakra-ui/react";
 import { useAppSelector } from "../../hooks/redux";
-import { jwtSelector } from "../../store/auth/auth-slice";
+import { roleSelector } from "../../store/auth/auth-slice";
 import { TopMenu } from "../../components/menu/TopMenu";
 
 export const MainMenu = () => {
-    const {
-        isOpen: isMenuOpen,
-        onOpen: onOpenMenu,
-        onClose: onCloseMenu,
-    } = useDisclosure();
-    const jwt = useAppSelector(jwtSelector);
+    const roles = useAppSelector(roleSelector);
 
     return (
         <>
-            {false && !!jwt && !isMenuOpen && (
-                <AvatarButton onClick={onOpenMenu} />
-            )}
-            {false && !!jwt && (
-                <MenuDrawer isOpen={isMenuOpen} onClose={onCloseMenu} />
-            )}
             <Box>
-                <TopMenu />
+                <TopMenu roles={roles} />
                 <Flex
                     as="header"
                     w="100vw"

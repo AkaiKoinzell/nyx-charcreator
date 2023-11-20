@@ -2,7 +2,7 @@ import { Card, CardBody, CardHeader, HStack, Heading } from "@chakra-ui/react";
 import { Character, exp } from "../../models/character/Character";
 import { CharacterProp } from "./CharacterProp";
 
-export const CharacterCard = ({ character }: { character: Character }) => {
+export const CharacterCard = ({ character }: { character: Character<string> }) => {
     return (
         <Card>
             <CardHeader>
@@ -13,7 +13,7 @@ export const CharacterCard = ({ character }: { character: Character }) => {
                     <CharacterProp propName="race" propValue={character.race} />
                     <CharacterProp
                         propName="class"
-                        propValue={character.class}
+                        propValue={character.class?.join(", ") ?? "No class found"}
                     />
                     <CharacterProp propName="exp" propValue={exp(character)} />
                 </HStack>
