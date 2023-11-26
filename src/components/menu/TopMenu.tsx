@@ -1,8 +1,12 @@
-import {  Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { SessionButton } from "./buttons/SessionButton";
 import { Roles } from "../../utils/jwt-utils";
+import { useGetCurrentMemberQuery } from "../../services/guild";
+import { AvatarIcon } from "./AvatarIcon";
 
-export const TopMenu = ({ roles }: { roles: Roles[]}) => {
+export const TopMenu = ({ roles }: { roles: Roles[] }) => {
+    const { data: member } = useGetCurrentMemberQuery();
+
     return (
         <Flex
             as="header"
@@ -14,7 +18,10 @@ export const TopMenu = ({ roles }: { roles: Roles[]}) => {
             pl="30vw"
             backdropFilter="saturate(180%) blur(5px)"
         >
-            { roles.includes(Roles.MANAGE_SESIONS) && <SessionButton /> }
+            {roles.includes(Roles.MANAGE_SESIONS) && <SessionButton />}
+            <Box position="absolute" right="2vw" paddingTop="0.25em">
+                <AvatarIcon user={member} />
+            </Box>
         </Flex>
     );
 };

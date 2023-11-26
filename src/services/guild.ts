@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthState } from "../store/auth/auth-slice";
+import { GuildMember } from "../models/user/GuildMember";
 
 export const guildApi = createApi({
     reducerPath: "guildApi",
@@ -13,8 +14,9 @@ export const guildApi = createApi({
             headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
+    keepUnusedDataFor: 300,
     endpoints: (builder) => ({
-        getCurrentMember: builder.query<any, void>({
+        getCurrentMember: builder.query<GuildMember, void>({
             query: () => "current/member",
         }),
     }),

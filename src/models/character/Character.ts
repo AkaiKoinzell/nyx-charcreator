@@ -9,10 +9,10 @@ export interface Character<P> {
     race: string;
     player: P;
     territory: string;
-    class: string[];
+    characterClass: string[];
     status: string;
     masterMS: number;
-    PBCMS: number;
+    pbcMS: number;
     errataMS: number;
     sessionMS: number;
     errata: Errata[];
@@ -30,4 +30,4 @@ export interface Character<P> {
     labels: LabelStub[];
 }
 
-export const exp = (c: Character<any>) => c.masterMS + c.PBCMS + c.errataMS + c.sessionMS
+export const exp = (c: Character<any>) => c.masterMS + c.pbcMS + c.errataMS + c.sessionMS

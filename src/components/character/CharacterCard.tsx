@@ -13,7 +13,7 @@ export const CharacterCard = ({ character }: { character: Character<string> }) =
                     <CharacterProp propName="race" propValue={character.race} />
                     <CharacterProp
                         propName="class"
-                        propValue={character.class?.join(", ") ?? "No class found"}
+                        propValue={character.characterClass?.join(", ") ?? "No class found"}
                     />
                     <CharacterProp propName="exp" propValue={exp(character)} />
                 </HStack>

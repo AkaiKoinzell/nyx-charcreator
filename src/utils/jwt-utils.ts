@@ -16,12 +16,14 @@ export function getJwtExpirationMillis(jwt: string): number {
 
 export enum Roles {
     ADMIN,
-    MANAGE_SESIONS
+    MANAGE_SESIONS,
+    PLAYER
 }
 
 const reverseEnum: { [key: string]: Roles} = {
     "a": Roles.ADMIN,
-    "mS": Roles.MANAGE_SESIONS
+    "mS": Roles.MANAGE_SESIONS,
+    "p": Roles.PLAYER
 }
 
 export function getRolesFromJwt(jwt: string | null): Roles[] {

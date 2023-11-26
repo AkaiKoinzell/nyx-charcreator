@@ -8,7 +8,8 @@ export const SessionButton = () => {
             <MenuButton
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
-                background="rgb(255, 255, 255)"
+                background="rgb(255, 255, 255, 0.7)"
+                backdropFilter="saturate(180%) blur(5px)"
                 borderRadius='0'
             >
                 Sessions
