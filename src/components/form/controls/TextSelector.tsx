@@ -1,5 +1,4 @@
 import {
-    FormControl,
     FormLabel,
     Input,
     Popover,
@@ -11,57 +10,76 @@ import {
     StackDivider,
     useDisclosure,
     Skeleton,
+    Text
 } from "@chakra-ui/react";
-import { Character } from "../../models/character/Character";
 import { useState } from "react";
-import { Player } from "../../models/player/Player";
+import { FormValue } from "../../../models/form/FormValue";
 
-type CharacterInputProps = {
+type TextSelectorProps<T> = {
     label: string;
     placeholder: string;
-    characters: Character<Player>[] | undefined;
+    entities: T[] | undefined;
+    filterCondition: (entity: T, query: string) => boolean;
+    keySelector: (entity: T) => string;
+    displayText: (entity: T) => string;
+    onClickSelector: (entity: T) => string;
+    valueConsumer?: (entities: FormValue<T>) => void;
+    validator?: (input: T[]) => boolean;
+    invalidLabel?: string;
 };
 
-export const CharacterInput = ({
+export function TextSelector<T>({
     label,
     placeholder,
-    characters,
-}: CharacterInputProps) => {
+    entities,
+    filterCondition,
+    displayText,
+    keySelector,
+    onClickSelector,
+    valueConsumer,
+    validator,
+    invalidLabel
+}: TextSelectorProps<T>) {
     const {
         isOpen,
         onOpen: popoverOpen,
         onClose: popoverClose,
     } = useDisclosure();
+    const [finalValue, setFinalValue] = useState<FormValue<T>>({value: undefined, isValid: true})
     const [inputValue, setInputValue] = useState<string>("");
-    const [filteredCharacters, setFilteredCharacters] = useState<
-        Character<Player>[]
-    >([]);
+    const [filteredEntities, setFilteredEntities] = useState<T[]>([]);
 
-    const filterCharacters = (value: string) => {
+    const filterEntities = (value: string) => {
         const query = value.toLowerCase().trim();
         const queryResult =
             query.length > 0
-                ? characters?.filter((c) =>
-                      c.name.toLowerCase().startsWith(query)
-                  )
-                : characters;
+                ? entities?.filter((e) => filterCondition(e, query))
+                : entities;
         setInputValue(value);
-        setFilteredCharacters(queryResult ?? []);
+        setFilteredEntities(queryResult ?? []);
+        const formValue = queryResult?.length === 1?  {
+            value: !!queryResult ? queryResult[0] : undefined,
+            isValid: !validator || validator(queryResult ?? [])
+        } : {value: undefined, isValid: false}
+        setFinalValue(formValue)
+        if(!!valueConsumer) {
+            valueConsumer(formValue)
+        }
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         popoverOpen();
-        filterCharacters(event.target.value);
+        filterEntities(event.target.value);
     };
 
-    const handleSelection = (characterName: string) => {
+    const handleSelection = (query: string) => {
         popoverClose();
-        filterCharacters(characterName);
+        filterEntities(query);
     };
 
     return (
-        <FormControl>
-            <FormLabel> {label} </FormLabel>
+        <>
+            <FormLabel color={finalValue.isValid ? "" : "crimson"}> {label} </FormLabel>
             <Popover
                 closeOnBlur={false}
                 closeOnEsc={true}
@@ -76,27 +94,32 @@ export const CharacterInput = ({
                         value={inputValue}
                         onChange={handleChange}
                         onBlur={popoverClose}
+                        borderColor={finalValue.isValid ? "" : "crimson"}
+                        borderWidth={finalValue.isValid ? "" : "2px"}
                     />
                 </PopoverTrigger>
+                {!finalValue.isValid && !!invalidLabel && <Text fontSize='sm' color="crimson">{invalidLabel}</Text>}
                 <PopoverContent>
                     <PopoverBody>
                         <VStack
                             divider={<StackDivider borderColor="gray.200" />}
                         >
-                            {!!characters &&
-                                filteredCharacters.map((it) => (
+                            {!!entities &&
+                                filteredEntities.map((it) => (
                                     <Container
-                                        key={it.id}
+                                        key={keySelector(it)}
                                         borderRadius="md"
                                         _hover={{ bg: "blackAlpha.300" }}
                                         onClick={() => {
-                                            handleSelection(it.name);
+                                            handleSelection(
+                                                onClickSelector(it)
+                                            );
                                         }}
                                     >
-                                        {it.name} ({it.player.name})
+                                        {displayText(it)}
                                     </Container>
                                 ))}
-                            {!characters &&
+                            {!entities &&
                                 [1, 2, 3, 4, 5].map((it) => (
                                     <Container key={it}>
                                         <Skeleton height="1.5ex"></Skeleton>
@@ -106,6 +129,6 @@ export const CharacterInput = ({
                     </PopoverBody>
                 </PopoverContent>
             </Popover>
-        </FormControl>
+        </>
     );
-};
+}

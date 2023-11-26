@@ -12,16 +12,16 @@ import {
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-type ErrorAlertWithNavigationProps = {
+type SuccessAlertWithNavigationProps = {
     show: boolean;
     navigateTo?: string;
     description?: string;
 };
-export const ErrorAlertWithNavigation = ({
+export const SuccessAlertWithNavigation = ({
     show,
     navigateTo,
-    description
-}: ErrorAlertWithNavigationProps) => {
+    description,
+}: SuccessAlertWithNavigationProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ export const ErrorAlertWithNavigation = ({
 
     const goToPage = () => {
         onClose();
-        if(!!navigateTo) {
+        if (!!navigateTo) {
             navigate(navigateTo);
         }
     };
@@ -48,14 +48,14 @@ export const ErrorAlertWithNavigation = ({
             <ModalOverlay />
             <ModalContent>
                 <ModalBody>
-                    <Alert status="error">
+                    <Alert status="success">
                         <AlertIcon />
-                        {description ?? "An error occurred, please try again later"}
+                        {description ?? "Operation completed succesfully"}
                     </Alert>
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme="red" onClick={goToPage}>
-                        Go Back
+                    <Button colorScheme="blue" onClick={goToPage}>
+                        Ok
                     </Button>
                 </ModalFooter>
             </ModalContent>

@@ -1,6 +1,6 @@
 export enum LabelType {
-    CHARACTER,
-    SESSION,
-    ITEM,
-    PROFICIENCY
+    CHARACTER = "CHARACTER",
+    SESSION = "SESSION",
+    ITEM = "ITEM",
+    PROFICIENCY = "PROFICIENCY"
 }
