@@ -52,7 +52,7 @@ export const AuthPage = () => {
                         dispatch(resetAuthenticationState());
                     }
                 );
-        } else {
+        } else if (!code && !debouncing.current) {
             navigate("/")
         }
     }, [code, debouncing, discordLogin, dispatch, navigate]);
