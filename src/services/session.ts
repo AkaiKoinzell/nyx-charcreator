@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthState } from "../store/auth/auth-slice";
 import { SessionRegistrationDto } from "../models/session/SessionRegistrationDto";
-import { SuccessResponse } from "../models/response/SuccessResponse";
+import { StatusResponse } from "../models/response/StatusResponse";
 
 export const sessionApi = createApi({
     reducerPath: "sessionApi",
@@ -18,11 +18,11 @@ export const sessionApi = createApi({
     }),
     keepUnusedDataFor: 300,
     endpoints: (build) => ({
-        registerSession: build.mutation<SuccessResponse, SessionRegistrationDto>({
-            query: (SessionRegistrationDto: SessionRegistrationDto) => ({
+        registerSession: build.mutation<StatusResponse, SessionRegistrationDto>({
+            query: (sessionRegistrationDto: SessionRegistrationDto) => ({
                 url: ``,
                 method: "POST",
-                body: JSON.stringify(SessionRegistrationDto),
+                body: JSON.stringify(sessionRegistrationDto),
                 headers: {
                      "Content-type": "application/json",
                      "Access-Control-Allow-Origin": "*"

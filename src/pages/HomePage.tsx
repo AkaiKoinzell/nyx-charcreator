@@ -29,7 +29,5 @@ export const HomePage = () => {
 };
 
 function openDiscordAuthWindow() {
-    const test = process.env.REACT_APP_DISCORD_OAUTH_URL;
-    console.log(test)
     window.open(process.env.REACT_APP_DISCORD_OAUTH_URL, "_parent");
 }

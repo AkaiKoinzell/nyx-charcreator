@@ -2,6 +2,7 @@ import { LabelStub } from "../label/LabelStub";
 import { Building } from "./Building";
 import { Errata } from "./Errata";
 import { Proficiency } from "./Proficiency";
+import {CharacterStatus} from "./CharacterStatus";
 
 export interface Character<P> {
     id: string;
@@ -10,7 +11,7 @@ export interface Character<P> {
     player: P;
     territory: string;
     characterClass: string[];
-    status: string;
+    status: CharacterStatus;
     masterMS: number;
     pbcMS: number;
     errataMS: number;
