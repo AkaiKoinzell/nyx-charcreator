@@ -110,7 +110,7 @@ export const InsertSessionForm = ({
                     placeholder="Select a character"
                     characters={characters}
                     validator={(input?: Character<Player>[]) =>
-                        !!input && input.length > 0
+                        !!input && input.length === 1
                     }
                     valueConsumer={(value: FormValue<Character<Player>>) => {
                         dispatchFormState({

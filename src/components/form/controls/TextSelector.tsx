@@ -47,7 +47,7 @@ export function TextSelector<T>({
     } = useDisclosure();
     const [finalValue, setFinalValue] = useState<FormValue<T>>({value: undefined, isValid: true})
     const [inputValue, setInputValue] = useState<string>("");
-    const [filteredEntities, setFilteredEntities] = useState<T[]>([]);
+    const [filteredEntities, setFilteredEntities] = useState<T[]>(entities ?? []);
 
     const filterEntities = (value: string) => {
         const query = value.toLowerCase().trim();
@@ -57,10 +57,10 @@ export function TextSelector<T>({
                 : entities;
         setInputValue(value);
         setFilteredEntities(queryResult ?? []);
-        const formValue = queryResult?.length === 1?  {
+        const formValue = queryResult?.length === 1? {
             value: !!queryResult ? queryResult[0] : undefined,
             isValid: !validator || validator(queryResult ?? [])
-        } : {value: undefined, isValid: false}
+        } : { value: undefined, isValid: !validator || validator(queryResult ?? []) }
         setFinalValue(formValue)
         if(!!valueConsumer) {
             valueConsumer(formValue)
