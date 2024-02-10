@@ -11,12 +11,14 @@ export const getToken = createAsyncThunk(
         const {
             auth: { jwt }
         } = getState() as { auth: AuthState }
-
+        console.log(`JWT: ${jwt}`)
         if(!jwt) {
+            // console.log("Load")
             const loadedJwt = localStorage.getItem(localStorageJwtKey)
             const refreshJwt = localStorage.getItem(localStorageRefreshJwtKey)
             const data = { jwt: loadedJwt, refreshJwt, roles: getRolesFromJwt(loadedJwt) }
             if(!!loadedJwt) {
+                // console.log(`Loaded: ${loadedJwt}`)
                 dispatch(setAuthenticationState(data))
             }
             return data

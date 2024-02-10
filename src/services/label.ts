@@ -4,7 +4,7 @@ import { Label } from "../models/label/Label";
 import { LabelType } from "../models/label/LabelType";
 
 interface LabelApiParameters {
-    labelType: LabelType | undefined;
+    labelType?: LabelType;
 }
 
 export const labelApi = createApi({
@@ -20,7 +20,6 @@ export const labelApi = createApi({
             headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
-    keepUnusedDataFor: 300,
     endpoints: (build) => ({
         getLabels: build.query<Label[], LabelApiParameters>({
             query: (params: LabelApiParameters) =>

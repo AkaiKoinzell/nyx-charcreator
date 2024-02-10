@@ -11,7 +11,7 @@ export function getJwtExpirationMillis(jwt: string): number {
     }
     const payload = JSON.parse(a2b(parts[1]));
     // Using the 'exp' string is safe to use as it is part of the JWT RFC and cannot be modified by us.
-    return ("exp" in payload) && !isNaN(+payload["exp"]) ? payload["exp"] * 1000 : 0
+    return ("exp" in payload) && !isNaN(+payload["exp"]) ? (payload["exp"] * 1000) - 10000 : 0
 }
 
 export enum Roles {

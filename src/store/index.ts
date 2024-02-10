@@ -6,6 +6,8 @@ import { authApi } from "../services/auth";
 import { characterApi } from "../services/character";
 import { labelApi } from "../services/label";
 import { sessionApi } from "../services/session";
+import { itemApi } from "../services/item";
+
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +15,7 @@ export const store = configureStore({
         [guildApi.reducerPath]: guildApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [characterApi.reducerPath]: characterApi.reducer,
+        [itemApi.reducerPath]: itemApi.reducer,
         [labelApi.reducerPath]: labelApi.reducer,
         [sessionApi.reducerPath]: sessionApi.reducer
     },
@@ -24,6 +27,7 @@ export const store = configureStore({
             .concat(characterApi.middleware)
             .concat(labelApi.middleware)
             .concat(sessionApi.middleware)
+            .concat(itemApi.middleware)
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

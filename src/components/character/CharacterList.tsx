@@ -1,4 +1,4 @@
-import { Container, Heading, Skeleton, VStack } from "@chakra-ui/react";
+import {Container, Heading, HStack, Skeleton, VStack} from "@chakra-ui/react";
 import { CharacterCard } from "./CharacterCard";
 import { Character } from "../../models/character/Character";
 
@@ -12,7 +12,7 @@ export const CharacterList = ({
             <Container>
                 <Heading>Your active characters</Heading>
             </Container>
-            <VStack spacing="2rem">
+            <HStack spacing="2rem" width="50vw">
                 {!!characters &&
                     characters.map((it) => (
                         <CharacterCard key={it.id} character={it} />
@@ -23,7 +23,7 @@ export const CharacterList = ({
                             <Skeleton height="10vh"></Skeleton>
                         </Container>
                     ))}
-            </VStack>
+            </HStack>
         </VStack>
     );
 };

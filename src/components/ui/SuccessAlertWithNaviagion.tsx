@@ -50,7 +50,7 @@ export const SuccessAlertWithNavigation = ({
                 <ModalBody>
                     <Alert status="success">
                         <AlertIcon />
-                        {description ?? "Operation completed succesfully"}
+                        {description ?? "Operation completed successfully"}
                     </Alert>
                 </ModalBody>
                 <ModalFooter>
