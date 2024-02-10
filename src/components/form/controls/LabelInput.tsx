@@ -9,7 +9,6 @@ import {
     Container,
     StackDivider,
     useDisclosure,
-    Skeleton,
     HStack,
     FormControl,
     Tag,
@@ -20,6 +19,7 @@ import {
 import { useState } from "react";
 import { Label } from "../../../models/label/Label";
 import { FormValue } from "../../../models/form/FormValue";
+import { generateSkeletons } from "../../ui/StackedSkeleton";
 
 type LabelInputProps = {
     label: string;
@@ -152,12 +152,7 @@ export const LabelInput = ({
                                         {it.name}
                                     </Container>
                                 ))}
-                            {!labels &&
-                                [1, 2, 3, 4, 5].map((it) => (
-                                    <Container key={it}>
-                                        <Skeleton height="1.5ex"></Skeleton>
-                                    </Container>
-                                ))}
+                            {!labels && generateSkeletons({ quantity: 5, height: "1.5ex"})}
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>

@@ -5,7 +5,7 @@ export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.REACT_APP_KAIRON_API_URL}`,
-        prepareHeaders: (headers) => {
+        prepareHeaders: (headers: Headers) => {
             headers.set("Access-Control-Allow-Origin", "*");
             headers.set("Content-Type", "application/json");
         },

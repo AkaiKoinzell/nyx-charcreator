@@ -1,7 +1,8 @@
 import React from 'react';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { HomePage } from './pages/HomePage';
-import { CharacterPage } from './pages/CharacterPage';
+import { CharactersPage } from './pages/CharactersPage';
+import { CharacterPage } from './pages/characters/CharacterPage';
 import { AuthenticatedLayout } from './pages/layouts/AuthenticatedLayout';
 import { AuthPage } from './pages/AuthPage';
 import { InsertSessionPage } from './pages/sessions/InsertSessionPage';
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
         path: "user",
         element: <AuthenticatedLayout />,
         children : [
-          { index: true, element: <CharacterPage /> }
+          { index: true, element: <CharactersPage /> },
+          { path: ":characterId", element: <CharacterPage />}
         ]
       },
       {

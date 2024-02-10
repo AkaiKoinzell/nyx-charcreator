@@ -16,7 +16,6 @@ export const sessionApi = createApi({
             headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
-    keepUnusedDataFor: 300,
     endpoints: (build) => ({
         registerSession: build.mutation<StatusResponse, SessionRegistrationDto>({
             query: (sessionRegistrationDto: SessionRegistrationDto) => ({

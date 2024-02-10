@@ -9,11 +9,11 @@ import {
     Container,
     StackDivider,
     useDisclosure,
-    Skeleton,
     Text
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { FormValue } from "../../../models/form/FormValue";
+import {generateSkeletons } from "../../ui/StackedSkeleton";
 
 type TextSelectorProps<T> = {
     label: string;
@@ -119,12 +119,7 @@ export function TextSelector<T>({
                                         {displayText(it)}
                                     </Container>
                                 ))}
-                            {!entities &&
-                                [1, 2, 3, 4, 5].map((it) => (
-                                    <Container key={it}>
-                                        <Skeleton height="1.5ex"></Skeleton>
-                                    </Container>
-                                ))}
+                            {!entities && generateSkeletons({ quantity: 5, height: "1.5ex"})}
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>

@@ -14,7 +14,6 @@ export const guildApi = createApi({
             headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
-    keepUnusedDataFor: 300,
     endpoints: (builder) => ({
         getCurrentMember: builder.query<GuildMember, void>({
             query: () => "current/member",

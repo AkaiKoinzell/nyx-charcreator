@@ -14,6 +14,9 @@ export type NumberInputProps = {
     validator?: (input?: number) => boolean;
     valueConsumer?: (value: FormValue<number>) => void;
     invalidLabel?: string;
+    max?: number;
+    min?: number;
+    formMarginLeft?: string;
 };
 
 export const NumberInput = ({
@@ -21,6 +24,9 @@ export const NumberInput = ({
     validator,
     valueConsumer,
     invalidLabel,
+    max,
+    min,
+    formMarginLeft
 }: NumberInputProps) => {
     const {
         getInputProps,
@@ -29,12 +35,20 @@ export const NumberInput = ({
         valueAsNumber,
     } = useNumberInput({
         step: 1,
-        defaultValue: 0,
+        defaultValue: min ?? 0,
         onChange: (_: string, valueAsNumber: number) => {
             if (!!valueConsumer) {
-                valueConsumer({ value: valueAsNumber, isValid });
+                valueConsumer({ value: valueAsNumber, isValid: !validator || validator(valueAsNumber) });
             }
-        }
+        },
+        onInvalid: (_: string, _value: string, valueAsNumber: number) => {
+            if(!!valueConsumer && !!min && valueAsNumber < min) {
+                valueConsumer({ value: min, isValid: !validator || validator(valueAsNumber) });
+            } else if(!!valueConsumer && !!max && valueAsNumber > max) {
+                valueConsumer({ value: max, isValid: !validator || validator(valueAsNumber) });
+            }
+        },
+        max, min
     });
 
     const isValid = !validator || validator(valueAsNumber);
@@ -43,7 +57,7 @@ export const NumberInput = ({
     const dec = getDecrementButtonProps();
     const input = getInputProps();
     return (
-        <FormControl marginLeft="2em">
+        <FormControl marginLeft={formMarginLeft ?? "2em"}>
             <FormLabel color={isValid ? "" : "crimson"}>{label}</FormLabel>
             <HStack>
                 <Button {...dec}>-</Button>
