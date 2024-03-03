@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
-import { getRolesFromJwt, Roles } from "../../utils/jwt-utils";
+import { getRolesFromJwt, Role } from "../../utils/jwt-utils";
 
 export interface AuthState {
     discordCode?: string | null;
     jwt: string | null;
     refreshJwt: string | null;
-    roles: Roles[];
+    roles: Role[];
 }
 
 const initialState: AuthState = {

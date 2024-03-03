@@ -25,7 +25,7 @@ interface ItemDisplayProps {
     character?: Character<any>
 }
 
-export type Breakpoints = {
+type Breakpoints = {
     labels: number
     materials: number
 }

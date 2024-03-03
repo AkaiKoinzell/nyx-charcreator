@@ -7,6 +7,7 @@ import { AuthenticatedLayout } from './pages/layouts/AuthenticatedLayout';
 import { AuthPage } from './pages/AuthPage';
 import { InsertSessionPage } from './pages/sessions/InsertSessionPage';
 import { AddErrataPage } from "./pages/errata/AddErrataPage";
+import { ListSessionsPage } from './pages/sessions/ListSessionsPage';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
         path: "session",
         element: <AuthenticatedLayout />,
         children: [
+          { path: "list", element: <ListSessionsPage /> },
           { path: "insert", element: <InsertSessionPage /> }
         ]
       },

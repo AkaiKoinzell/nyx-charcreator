@@ -19,7 +19,7 @@ export const itemApi = createApi({
             headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
-    tagTypes: [ItemsTagType, MaterialsTagType, CharactersTagType],
+    tagTypes: [ItemsTagType, MaterialsTagType],
     endpoints: (build) => ({
         getItems: build.query<Item[], void>({
             query: () => "",

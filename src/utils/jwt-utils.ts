@@ -14,21 +14,21 @@ export function getJwtExpirationMillis(jwt: string): number {
     return ("exp" in payload) && !isNaN(+payload["exp"]) ? (payload["exp"] * 1000) - 10000 : 0
 }
 
-export enum Roles {
+export enum Role {
     ADMIN,
     MANAGE_SESSIONS,
     PLAYER,
     MANAGE_CHARACTERS,
 }
 
-const reverseEnum: { [key: string]: Roles} = {
-    "a": Roles.ADMIN,
-    "mS": Roles.MANAGE_SESSIONS,
-    "p": Roles.PLAYER,
-    "mC": Roles.MANAGE_CHARACTERS
+const reverseEnum: { [key: string]: Role} = {
+    "a": Role.ADMIN,
+    "mS": Role.MANAGE_SESSIONS,
+    "p": Role.PLAYER,
+    "mC": Role.MANAGE_CHARACTERS
 }
 
-export function getRolesFromJwt(jwt: string | null): Roles[] {
+export function getRolesFromJwt(jwt: string | null): Role[] {
     if(!jwt) return [];
     const parts = jwt.split(".");
     if (parts.length !== 3) {
