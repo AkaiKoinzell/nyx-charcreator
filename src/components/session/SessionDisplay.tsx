@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Divider, HStack, Heading, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Stat, StatHelpText, StatLabel, StatNumber, Tag, TagLabel, Text, VStack, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Button, Card, CardBody, CardFooter, CardHeader, Divider, HStack, Heading, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Stat, StatHelpText, StatLabel, StatNumber, Tag, TagLabel, Text, VStack, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import { Player } from "../../models/player/Player"
 import { Session } from "../../models/session/Session"
 import { formatDate } from "../../utils/string-utils";
@@ -12,6 +12,7 @@ import { QueryStatus } from "@reduxjs/toolkit/query";
 import { ErrorAlertWithNavigation } from "../ui/ErrorAlertWithNavigation";
 import { LoadingModal } from "../ui/LoadingModal";
 import { SuccessAlertWithNavigation } from "../ui/SuccessAlertWithNaviagion";
+import { useGetCharacterTokenQuery } from "../../services/character";
 
 interface SessionDisplayProps {
     session: Session<Player>;
@@ -71,10 +72,21 @@ export const SessionDisplay = ({ session, roles }: SessionDisplayProps) => {
 }
 
 const ParticipantDisplay = ({ character }: { character: CharacterUpdate }) => {
+    const { data: token } = useGetCharacterTokenQuery(character.character)
     return <Stat>
         <StatLabel>
-            {!character.isAlive && <Avatar size='sm' bg='red.300' icon={<Icon as={FaSkull} fontSize='1.3rem' />} />}
-            {!!character.isAlive && <Avatar size='sm' bg='teal.300' icon={<Icon as={LuSwords} fontSize='1.3rem' />} />}
+            {!token && !character.isAlive && <Avatar size='sm' bg='red.300' icon={<Icon as={FaSkull} fontSize='1.3rem' />} />}
+            {!!token && !character.isAlive && <Avatar 
+                    size='sm' 
+                    bg='red.300'
+                    src={`data:${token.mimeType};base64,${token.image}`}
+                ><AvatarBadge boxSize='1.25em' bg='red.300' /></Avatar>}
+            {!!character.isAlive && <Avatar 
+                size='sm' 
+                bg='teal.300' 
+                icon={!token ? <Icon as={LuSwords} fontSize='1.3rem' /> : undefined} 
+                src={!!token ? `data:${token.mimeType};base64,${token.image}`: undefined}
+            />}
         </StatLabel>
         <StatNumber>{character.ms} exp</StatNumber>
         <StatHelpText>{character.character.split(':')[1]}</StatHelpText>

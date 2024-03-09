@@ -4,7 +4,7 @@ import { SessionRegistrationDto } from "../models/session/SessionRegistrationDto
 import { StatusResponse } from "../models/response/StatusResponse";
 import { AllSessionsTag, SessionsCountTag, SessionsTagType } from "./tags";
 import { PaginatedList } from "../models/response/PaginatedList";
-import { PaginatedRequestParams } from "../models/response/PaginatedRequestParams";
+import { PaginatedRequestParams } from "../models/request/PaginatedRequestParams";
 import { Session } from "../models/session/Session";
 import { Player } from "../models/player/Player";
 import { CountDto } from "../models/dto/CountDto";

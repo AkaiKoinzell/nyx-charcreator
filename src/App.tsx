@@ -8,6 +8,7 @@ import { AuthPage } from './pages/AuthPage';
 import { InsertSessionPage } from './pages/sessions/InsertSessionPage';
 import { AddErrataPage } from "./pages/errata/AddErrataPage";
 import { ListSessionsPage } from './pages/sessions/ListSessionsPage';
+import { AllItemsPage } from './pages/items/AllItemsPage';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,13 @@ const router = createBrowserRouter([
         element: <AuthenticatedLayout />,
         children: [
           { path: "update", element: <AddErrataPage /> }
+        ]
+      },
+      {
+        path: "item",
+        element: <AuthenticatedLayout />,
+        children: [
+          { path: "list", element: <AllItemsPage /> }
         ]
       }
     ],

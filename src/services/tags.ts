@@ -3,6 +3,7 @@
 export const CharactersTagType = 'Character'
 export const AllCharactersTag = { type: 'Character' as const, id: "All" }
 export const CurrentCharactersTag = { type: 'Character' as const, id: "Current" }
+export const TokenTagType = 'Token'
 
 // endregion
 

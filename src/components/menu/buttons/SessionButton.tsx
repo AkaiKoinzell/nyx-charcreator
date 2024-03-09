@@ -3,7 +3,7 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Role } from "../../../utils/jwt-utils";
 
-export const SessionButton = ({ roles }: { roles: Role[]}) => {
+export const SessionButton = ({ roles }: { roles: Role[] }) => {
     return (
         <Menu>
             <MenuButton

@@ -28,3 +28,5 @@ export function formatDate(timestamp: number): string {
     const year = date.getFullYear().toString();
     return `${day}-${month}-${year}`;
 }
+
+export type Base64String = string;
