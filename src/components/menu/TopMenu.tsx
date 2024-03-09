@@ -1,12 +1,13 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { SessionButton } from "./buttons/SessionButton";
-import { Roles } from "../../utils/jwt-utils";
+import { Role } from "../../utils/jwt-utils";
 import { useGetCurrentMemberQuery } from "../../services/guild";
 import { AvatarIcon } from "./AvatarIcon";
 import React from "react";
 import { CharacterButton } from "./buttons/CharacterButton";
+import { ItemButton } from "./buttons/ItemButton";
 
-export const TopMenu = ({ roles }: { roles: Roles[] }) => {
+export const TopMenu = ({ roles }: { roles: Role[] }) => {
     const { data: member } = useGetCurrentMemberQuery();
 
     return (
@@ -20,8 +21,9 @@ export const TopMenu = ({ roles }: { roles: Roles[] }) => {
             pl="30vw"
             backdropFilter="saturate(180%) blur(5px)"
         >
-            {roles.includes(Roles.MANAGE_SESSIONS) && <SessionButton />}
-            {roles.includes(Roles.MANAGE_CHARACTERS) && <CharacterButton />}
+            <SessionButton roles={roles} />
+            {roles.includes(Role.MANAGE_CHARACTERS) && <CharacterButton />}
+            <ItemButton />
             <Box position="absolute" right="2vw" paddingTop="0.25em">
                 <AvatarIcon user={member} />
             </Box>

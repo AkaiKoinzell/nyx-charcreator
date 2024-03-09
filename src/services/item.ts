@@ -1,10 +1,10 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {AuthState} from "../store/auth/auth-slice";
 import {Item} from "../models/item/Item";
-import {AllCharactersTag, AllItemsTag, CharactersTagType, ItemsTagType, MaterialsTagType} from "./tags";
+import {AllItemsTag, ItemsTagType, MaterialsTagType} from "./tags";
 import {ListOfIds} from "../models/response/ListOfIds";
-import { StatusResponse } from "../models/response/StatusResponse";
-import { UpdateInventoryDto } from "../models/character/UpdateInventoryDto";
+import { PaginatedList } from "../models/response/PaginatedList";
+import { SearchItemsParams } from "../models/request/SearchItemsParams";
 
 export const itemApi = createApi({
     reducerPath: "itemApi",
@@ -19,9 +19,9 @@ export const itemApi = createApi({
             headers.set("Access-Control-Allow-Origin", "*");
         },
     }),
-    tagTypes: [ItemsTagType, MaterialsTagType, CharactersTagType],
+    tagTypes: [ItemsTagType, MaterialsTagType],
     endpoints: (build) => ({
-        getItems: build.query<Item[], void>({
+        getItems: build.query<Item[], null>({
             query: () => "",
             providesTags: [AllItemsTag]
         }),
@@ -30,10 +30,7 @@ export const itemApi = createApi({
                 url: "/byIds",
                 method: "POST",
                 body: JSON.stringify({ ids }),
-                headers: {
-                    "Content-type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                },
+                headers: { "Content-type": "application/json" }
             }),
             providesTags: (items) =>
                 !!items ? [AllItemsTag, ...(items.map(it => ({ type: 'Item' as const, id: it.name})))] : [AllItemsTag]
@@ -41,6 +38,16 @@ export const itemApi = createApi({
         getMaterialsBy: build.query<ListOfIds, string>({
             query: (id: string) => `/materialsBy/${id}`,
             providesTags: (_response, _error, id) => [{ type: MaterialsTagType, id}]
+        }),
+        searchItems: build.query<PaginatedList<Item>, SearchItemsParams>({
+            query: (params: SearchItemsParams) => ({
+                url: `/search?ts=${new Date().getTime()}${!!params.limit ? `&limit=${params.limit}`: ''}${!!params.nextAt ? `&nextAt=${params.nextAt}`: ''}`
+                    + (!!params.query ? `&query=${params.query}` : ""),
+                method: "POST",
+                body: JSON.stringify(params.label ?? null),
+                headers: { "Content-type": "application/json" }
+            }),
+            providesTags: [AllItemsTag]
         })
     }),
 });
@@ -48,5 +55,10 @@ export const itemApi = createApi({
 export const {
     useGetItemsQuery,
     useGetItemsByIdsQuery,
-    useLazyGetMaterialsByQuery
+    useLazyGetMaterialsByQuery,
+    useSearchItemsQuery
 } = itemApi
+
+export const useItemsPrefetch = itemApi.usePrefetch;
+
+export type ItemApiEndpoints = keyof typeof itemApi

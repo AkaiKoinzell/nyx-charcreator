@@ -15,7 +15,7 @@ export const CharacterButton = () => {
                 Characters
             </MenuButton>
             <MenuList>
-                <MenuItem><Link to="/character/update">Update Character</Link></MenuItem>
+            <Link to="/character/update"><MenuItem>Update Character</MenuItem></Link>
             </MenuList>
         </Menu>
     );

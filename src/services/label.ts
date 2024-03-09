@@ -29,3 +29,7 @@ export const labelApi = createApi({
 });
 
 export const { useGetLabelsQuery } = labelApi;
+
+export const useLabelPrefetch = labelApi.usePrefetch;
+
+export type LabelApiEndpoints = keyof typeof labelApi
