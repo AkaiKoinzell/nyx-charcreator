@@ -42,7 +42,12 @@ export const AllItemsPage = () => {
         }
     }
 
+    const onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+       onLabelChange(loadedLabels?.find(it => it.id === event.target.selectedOptions[0]?.id))
+    }
+
     const onLabelChange = (label?: Label) => {
+        console.log(`changing label ${label}`)
         const newValue = !!label ? { id: label.id, name: label.name } : undefined;
         setLabelFilter(newValue);
         setNextAt(undefined);
@@ -78,8 +83,8 @@ export const AllItemsPage = () => {
             <Stack direction={{base: "column", sm: "row"}}>
                 {!loadedLabels && !labelsError && <Container minWidth="10vw"><Skeleton height="4vh"/></Container>}
                 {!!labelsError && <Alert status="error" height="4.5vh"><AlertIcon />Cannot load labels</Alert>}
-                {!!loadedLabels && !labelFilter && <Select placeholder="Filter by label">
-                    {[...loadedLabels].sort((a,b) => a.name.localeCompare(b.name)).map(it => <option key={it.id} onClick={() => {onLabelChange(it)}}>{it.name}</option>)}
+                {!!loadedLabels && !labelFilter && <Select placeholder="Filter by label" id="label-placeholder" onChange={onSelectChange}>
+                    {[...loadedLabels].sort((a,b) => a.name.localeCompare(b.name)).map(it => <option key={it.id} id={it.id}>{it.name}</option>)}
                 </Select>}
                 {!!loadedLabels && !!labelFilter && <Alert status="success" height="4.5vh"><CloseButton
                     position='relative'
@@ -88,7 +93,7 @@ export const AllItemsPage = () => {
                 />{loadedLabels.find(it => it.id === labelFilter.id)?.name}</Alert>}
                 <InputGroup>
                     <InputLeftAddon><SearchIcon /></InputLeftAddon>
-                    <Input placeholder="Search" minWidth="75vw" onChange={onChangeFilter}/>
+                    <Input id="item-search-bar" placeholder="Search" minWidth="75vw" onChange={onChangeFilter}/>
                     {isTyping && <InputRightElement><Spinner /></InputRightElement>}
                 </InputGroup>
             </Stack>

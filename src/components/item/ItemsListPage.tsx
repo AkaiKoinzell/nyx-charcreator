@@ -30,6 +30,14 @@ export const ItemsListPage = ({ items, owned, character }: ItemsListPageProps) =
     const [labelFilter, setLabelFilter] = useState<string | null>(null)
     const [searchFilter, setSearchFilter] = useState<string | null>(null)
 
+    const onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedId = event.target.selectedOptions[0]?.id;
+        if(!!selectedId) {
+            setLabelFilter(selectedId);
+        }
+
+     }
+
     const onChangeFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.value.trim().length > 0) {
             setSearchFilter(e.target.value.trim().toLowerCase())
@@ -44,8 +52,8 @@ export const ItemsListPage = ({ items, owned, character }: ItemsListPageProps) =
             <Stack direction={{base: "column", sm: "row"}}>
                 {!loadedLabels && !labelsError && <Container minWidth="10vw"><Skeleton height="4vh"/></Container>}
                 {!!labelsError && <Alert status="error" height="4.5vh"><AlertIcon />Cannot load labels</Alert>}
-                {!!loadedLabels && !labelFilter && <Select placeholder="Filter by label">
-                    {[...loadedLabels].sort((a,b) => a.name.localeCompare(b.name)).map(it => <option key={it.id} onClick={() => {setLabelFilter(it.id)}}>{it.name}</option>)}
+                {!!loadedLabels && !labelFilter && <Select placeholder="Filter by label" onChange={onSelectChange}>
+                    {[...loadedLabels].sort((a,b) => a.name.localeCompare(b.name)).map(it => <option key={it.id} id={it.id}>{it.name}</option>)}
                 </Select>}
                 {!!loadedLabels && !!labelFilter && <Alert status="success" height="4.5vh"><CloseButton
                     position='relative'
