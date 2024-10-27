@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useItemsPrefetch } from "../../../services/item";
 import { useLabelPrefetch } from "../../../services/label";
 
-export const ItemButton = () => {
+export const ItemButton = ({ backgroundColor }: { backgroundColor: string }) => {
     const prefetchPaginatedItems = useItemsPrefetch("searchItems")
     const prefetchAllLabels = useLabelPrefetch("getLabels")
     return (
@@ -12,7 +12,7 @@ export const ItemButton = () => {
             <MenuButton
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
-                background="rgb(255, 255, 255, 0.7)"
+                background={ backgroundColor }
                 backdropFilter="saturate(180%) blur(5px)"
                 borderRadius='0'
                 onMouseEnter={() => {

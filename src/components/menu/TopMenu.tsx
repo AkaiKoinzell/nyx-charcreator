@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import {Box, Flex, useColorMode} from "@chakra-ui/react";
 import { SessionButton } from "./buttons/SessionButton";
 import { Role } from "../../utils/jwt-utils";
 import { useGetCurrentMemberQuery } from "../../services/guild";
@@ -8,7 +8,9 @@ import { CharacterButton } from "./buttons/CharacterButton";
 import { ItemButton } from "./buttons/ItemButton";
 
 export const TopMenu = ({ roles }: { roles: Role[] }) => {
+    const { colorMode } = useColorMode()
     const { data: member } = useGetCurrentMemberQuery();
+    const backgroundColor = colorMode === "light" ? "rgb(255, 255, 255, 0.7)" : "rgb(26, 32, 44, 0.7)"
 
     return (
         <Flex
@@ -17,13 +19,13 @@ export const TopMenu = ({ roles }: { roles: Role[] }) => {
             h="5vh"
             position="fixed"
             zIndex="sticky"
-            background="rgb(255, 255, 255, 0.7)"
+            background={backgroundColor}
             pl="30vw"
             backdropFilter="saturate(180%) blur(5px)"
         >
-            <SessionButton roles={roles} />
-            {roles.includes(Role.MANAGE_CHARACTERS) && <CharacterButton />}
-            <ItemButton />
+            <SessionButton roles={roles} backgroundColor={backgroundColor} />
+            {roles.includes(Role.MANAGE_CHARACTERS) && <CharacterButton backgroundColor={backgroundColor}/>}
+            <ItemButton backgroundColor={backgroundColor}/>
             <Box position="absolute" right="2vw" paddingTop="0.25em">
                 <AvatarIcon user={member} />
             </Box>
