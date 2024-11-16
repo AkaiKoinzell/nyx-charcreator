@@ -19,13 +19,15 @@ export enum Role {
     MANAGE_SESSIONS,
     PLAYER,
     MANAGE_CHARACTERS,
+    MANAGE_ITEMS
 }
 
 const reverseEnum: { [key: string]: Role} = {
     "a": Role.ADMIN,
     "mS": Role.MANAGE_SESSIONS,
     "p": Role.PLAYER,
-    "mC": Role.MANAGE_CHARACTERS
+    "mC": Role.MANAGE_CHARACTERS,
+    "mI": Role.MANAGE_ITEMS
 }
 
 export function getRolesFromJwt(jwt: string | null): Role[] {

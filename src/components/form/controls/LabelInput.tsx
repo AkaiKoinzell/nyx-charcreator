@@ -14,21 +14,22 @@ import {
     Tag,
     TagLabel,
     TagCloseButton,
-    Text,
+    Text, SpaceProps,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Label } from "../../../models/label/Label";
 import { FormValue } from "../../../models/form/FormValue";
 import { generateSkeletons } from "../../ui/StackedSkeleton";
 
-type LabelInputProps = {
+interface LabelInputProps extends SpaceProps {
     label: string;
     placeholder: string;
     labels: Label[] | undefined;
     valueConsumer?: (entities: FormValue<Label[]>) => void;
     validator?: (input: Label[]) => boolean;
     invalidLabel?: string;
-};
+    defaultValue?: Label[];
+}
 
 export const LabelInput = ({
     label,
@@ -37,6 +38,8 @@ export const LabelInput = ({
     valueConsumer,
     validator,
     invalidLabel,
+    defaultValue,
+    ...style
 }: LabelInputProps) => {
     const {
         isOpen,
@@ -44,7 +47,7 @@ export const LabelInput = ({
         onClose: popoverClose,
     } = useDisclosure();
     const [selectedLabels, setSelectedLabels] = useState<FormValue<Label[]>>({
-        value: [],
+        value: defaultValue ?? [],
         isValid: true,
     });
     const [inputValue, setInputValue] = useState<string>("");
@@ -52,10 +55,9 @@ export const LabelInput = ({
 
     const filterEntities = (value: string) => {
         const query = value.toLowerCase().trim();
-        const queryResult =
-            query.length > 0
-                ? labels?.filter((l) => l.name.toLowerCase().startsWith(query))
-                : labels;
+        const queryResult = query.length > 0
+            ? labels?.filter((l) => l.name.toLowerCase().startsWith(query))
+            : labels;
         setInputValue(value);
         setFilteredLabels(queryResult ?? []);
     };
@@ -106,7 +108,7 @@ export const LabelInput = ({
     };
 
     return (
-        <FormControl>
+        <FormControl {...style}>
             <FormLabel color={selectedLabels.isValid ? "" : "crimson"}>
                 {" "}
                 {label}{" "}

@@ -25,7 +25,7 @@ export const TopMenu = ({ roles }: { roles: Role[] }) => {
         >
             <SessionButton roles={roles} backgroundColor={backgroundColor} />
             {roles.includes(Role.MANAGE_CHARACTERS) && <CharacterButton backgroundColor={backgroundColor}/>}
-            <ItemButton backgroundColor={backgroundColor}/>
+            <ItemButton roles={roles} backgroundColor={backgroundColor}/>
             <Box position="absolute" right="2vw" paddingTop="0.25em">
                 <AvatarIcon user={member} />
             </Box>

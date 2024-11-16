@@ -11,7 +11,7 @@ import {
     useDisclosure,
     Text
 } from "@chakra-ui/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FormValue } from "../../../models/form/FormValue";
 import {generateSkeletons } from "../../ui/StackedSkeleton";
 
@@ -26,6 +26,7 @@ type TextSelectorProps<T> = {
     valueConsumer?: (entities: FormValue<T>) => void;
     validator?: (input: T[]) => boolean;
     invalidLabel?: string;
+    defaultValue?: T;
 };
 
 export function TextSelector<T>({
@@ -38,15 +39,16 @@ export function TextSelector<T>({
     onClickSelector,
     valueConsumer,
     validator,
-    invalidLabel
+    invalidLabel,
+    defaultValue
 }: TextSelectorProps<T>) {
     const {
         isOpen,
         onOpen: popoverOpen,
         onClose: popoverClose,
     } = useDisclosure();
-    const [finalValue, setFinalValue] = useState<FormValue<T>>({value: undefined, isValid: true})
-    const [inputValue, setInputValue] = useState<string>("");
+    const [finalValue, setFinalValue] = useState<FormValue<T>>({value: defaultValue, isValid: true})
+    const [inputValue, setInputValue] = useState<string>(!!defaultValue ? displayText(defaultValue) : "");
     const [filteredEntities, setFilteredEntities] = useState<T[]>(entities ?? []);
 
     const filterEntities = (value: string) => {

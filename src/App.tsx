@@ -9,6 +9,7 @@ import { InsertSessionPage } from './pages/sessions/InsertSessionPage';
 import { AddErrataPage } from "./pages/errata/AddErrataPage";
 import { ListSessionsPage } from './pages/sessions/ListSessionsPage';
 import { AllItemsPage } from './pages/items/AllItemsPage';
+import {AddItemPage} from "./pages/items/AddItemPage";
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,8 @@ const router = createBrowserRouter([
         path: "item",
         element: <AuthenticatedLayout />,
         children: [
-          { path: "list", element: <AllItemsPage /> }
+          { path: "list", element: <AllItemsPage /> },
+          { path: "add", element: <AddItemPage /> }
         ]
       }
     ],

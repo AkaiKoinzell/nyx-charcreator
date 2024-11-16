@@ -17,6 +17,7 @@ export type NumberInputProps = {
     max?: number;
     min?: number;
     formMarginLeft?: string;
+    defaultValue?: number | null
 };
 
 export const NumberInput = ({
@@ -26,7 +27,8 @@ export const NumberInput = ({
     invalidLabel,
     max,
     min,
-    formMarginLeft
+    formMarginLeft,
+    defaultValue
 }: NumberInputProps) => {
     const {
         getInputProps,
@@ -35,7 +37,7 @@ export const NumberInput = ({
         valueAsNumber,
     } = useNumberInput({
         step: 1,
-        defaultValue: min ?? 0,
+        defaultValue: defaultValue ?? min ?? 0,
         onChange: (_: string, valueAsNumber: number) => {
             if (!!valueConsumer) {
                 valueConsumer({ value: valueAsNumber, isValid: !validator || validator(valueAsNumber) });
