@@ -26,7 +26,7 @@ export const ItemButton = ({ roles, backgroundColor }: { roles: Role[], backgrou
             </MenuButton>
             <MenuList>
                 <Link to="/item/list"><MenuItem>Items List</MenuItem></Link>
-                {roles.includes(Role.MANAGE_SESSIONS) &&<Link to="/item/add"><MenuItem>Add an Item</MenuItem></Link>}
+                {roles.includes(Role.MANAGE_ITEMS) &&<Link to="/item/add"><MenuItem>Add an Item</MenuItem></Link>}
             </MenuList>
         </Menu>
     );

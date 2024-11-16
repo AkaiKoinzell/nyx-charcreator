@@ -13,7 +13,6 @@ import {
     Select,
     Skeleton, Stack,
     VStack,
-    chakra
 } from "@chakra-ui/react";
 import {SearchIcon} from "@chakra-ui/icons";
 import {ItemDisplay} from "./ItemDisplay";
@@ -68,7 +67,15 @@ export const ItemsListPage = ({ items, owned, character }: ItemsListPageProps) =
             {items.sort((itemA, itemB) => itemA.name.localeCompare(itemB.name))
                 .filter(it => !labelFilter || (!!labelFilter && it.labels.find(l => l.id === labelFilter)))
                 .filter(it => !searchFilter || (!!searchFilter && it.name.toLowerCase().includes(searchFilter)))
-                .map(it => <ItemDisplay key={it.name} item={it} owned={!!owned ? owned[it.name] : undefined} onLabelClick={id => setLabelFilter(id)} character={character}/>)
+                .map(it => <ItemDisplay
+                    key={it.name}
+                    item={it}
+                    owned={!!owned ? owned[it.name] : undefined}
+                    onLabelClick={id => setLabelFilter(id)} character={character}
+                    showControls={false}
+                    onMouseEnter={() => {}}
+                    controlsOnEdit={() => {}}
+                />)
             }
         </VStack>}
     </>)

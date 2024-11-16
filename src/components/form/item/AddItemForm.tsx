@@ -20,27 +20,36 @@ import {LabelInput} from "../controls/LabelInput";
 import {AddRecipeForm} from "./AddRecipeForm";
 import {useAppDispatch, useAppSelector} from "../../../hooks/redux";
 import {useEffect, useState} from "react";
-import {clearRecipes, recipesSelector} from "../../../store/recipes/recipes-slice";
-import {EditIcon} from "@chakra-ui/icons";
+import {clearRecipes, recipesSelector, removeRecipe, setRecipes} from "../../../store/recipes/recipes-slice";
+import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import {CraftRequirement} from "../../../models/item/CraftRequirement";
 import {ManualSource} from "../../../models/item/ManualSource";
 import {Label} from "../../../models/label/Label";
 import {LabelStub} from "../../../models/label/LabelStub";
-
-const testSources: ManualSource[] = [ {name: "None", abbreviation: "None"}, {name: "Basic", abbreviation: "PHB"}]
+import {useCreateItemMutation, useUpdateItemMutation} from "../../../services/item";
+import {ErrorAlertWithNavigation} from "../../ui/ErrorAlertWithNavigation";
+import {SuccessAlertWithNavigation} from "../../ui/SuccessAlertWithNaviagion";
 
 interface AddItemFormProps {
 	initialState?: Item,
-	itemLabels: Label[]
+	itemLabels: Label[],
+	manualSources: ManualSource[]
 }
 
-export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => {
+export const AddItemForm = ({ initialState, itemLabels, manualSources }: AddItemFormProps)  => {
 	const dispatch = useAppDispatch()
 	const recipes = useAppSelector(recipesSelector)
 
+	const [createItem, { isLoading: createIsLoading, error: createError, isSuccess: createSuccess }] = useCreateItemMutation()
+	const [updateItem, { isLoading: updateIsLoading, error: updateError, isSuccess: updateSuccess}] = useUpdateItemMutation()
+
 	useEffect(() => {
-		dispatch(clearRecipes())
-	}, [dispatch]);
+		if(!!initialState) {
+			dispatch(setRecipes(initialState.craft ?? []))
+		} else {
+			dispatch(clearRecipes())
+		}
+	}, [dispatch, initialState]);
 
 	const { onOpen: recipeModalOpen, onClose: recipeModalClose, isOpen: recipeModalIsOpen } = useDisclosure()
 	const [currentRecipe, setCurrentRecipe] = useState<CraftRequirement | undefined>(undefined)
@@ -69,10 +78,38 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 		value: initialState?.link ?? undefined,
 		isValid: true
 	})
+	const [manual, setManual] = useState<FormValue<ManualSource>>({
+		value: !!initialState?.manual ? manualSources.find(it => it.abbreviation === initialState.manual) : undefined,
+		isValid: true
+	})
 	const [labels, setLabels] = useState<FormValue<LabelStub[]>>({
 		value: initialState?.labels ?? undefined,
 		isValid: true
 	})
+
+	const onSubmit = () => {
+		const item: Item = {
+			name: itemName.value!.trim(),
+			sell: sellPrice.value && sellPrice.value  > 0 ? { cost: sellPrice.value, buildings: [], tools: [] } : undefined,
+			buy: buyPrice.value && buyPrice.value  > 0 ? { cost: buyPrice.value, buildings: [], tools: [] } : undefined,
+			usable: !!isUsable.value,
+			attunement: !!attunement.value,
+			link: sourceLink.value ?? null,
+			manual: manual.value?.name ?? null,
+			giveRatio: 1,
+			craft: recipes,
+			labels: labels.value ?? []
+		}
+		if (!!initialState) {
+			updateItem({
+				item: item,
+				originalName: initialState.name,
+			})
+		} else {
+			createItem(item)
+		}
+	}
+
 	return (
 		<Card width="90vw" marginLeft="5vw">
 			<CardHeader>
@@ -91,6 +128,7 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 					<ControllableNumberInput
 						label="Sell price"
 						valueConsumer={setSellPrice}
+						min={0}
 						defaultValue={!!initialState?.sell?.cost
 							? {
 								isEnabled: initialState.sell.cost > 0,
@@ -101,6 +139,7 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 					<ControllableNumberInput
 						label="Buy price"
 						valueConsumer={setBuyPrice}
+						min={0}
 						defaultValue={!!initialState?.buy?.cost
 							? {
 								isEnabled: initialState.buy.cost > 0,
@@ -130,11 +169,12 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 					<SourceSelector
 						label="Manual"
 						placeholder="None"
-						manuals={testSources}
+						manuals={manualSources}
 						defaultValue={!!initialState?.manual
-							? testSources.find(it => it.abbreviation === initialState.manual)
+							? manualSources.find(it => it.abbreviation === initialState.manual)
 							: undefined
 						}
+						valueConsumer={setManual}
 					/>
 				</Flex>
 				<LabelInput
@@ -162,6 +202,14 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 							mb="1em"
 						>
 							<IconButton
+								colorScheme='red'
+								aria-label='Delete recipe'
+								icon={<DeleteIcon />}
+								onClick={() => {
+									dispatch(removeRecipe(recipe.label ?? ""))
+								}}
+							/>
+							<IconButton
 								colorScheme='blue'
 								aria-label='Edit recipe'
 								icon={<EditIcon />}
@@ -180,6 +228,8 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 				<Button
 					colorScheme='blue'
 					isDisabled={!itemName.isValid}
+					isLoading={createIsLoading || updateIsLoading}
+					onClick={onSubmit}
 				>
 					{!!initialState ? "Update item" : "Add item"}
 				</Button>
@@ -198,6 +248,10 @@ export const AddItemForm = ({ initialState, itemLabels }: AddItemFormProps)  => 
 					</ModalBody>
 				</ModalContent>
 			</Modal>
+			<ErrorAlertWithNavigation show={!!createError} navigateTo="/" description={`Something went wrong: ${JSON.stringify(createError)}`} />
+			<ErrorAlertWithNavigation show={!!updateError} navigateTo="/item/list" description={`Something went wrong: ${JSON.stringify(updateError)}`} />
+			<SuccessAlertWithNavigation show={createSuccess} navigateTo="/" description="Item created succesfully" />
+			<SuccessAlertWithNavigation show={updateSuccess} navigateTo="/item/list" description="Item updated succesfully" />
 		</Card>
 	);
 }
