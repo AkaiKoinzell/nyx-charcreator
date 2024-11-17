@@ -60,7 +60,7 @@ export const AddRecipeForm = ({ recipe, onSubmit }: AddRecipeFormProps) => {
 			minQuantity: boundaries.value?.min ?? 1,
 			maxQuantity: boundaries.value?.max ?? boundaries.value?.min ?? 1,
 			materials: Object.fromEntries(materials.value?.map(it => [it.item, it.quantity / dividerIfMultiple]) ?? []),
-			label: recipeName?.value ?? "Unnamed recipe",
+			label: recipeName?.value?.trim() ?? "Unnamed recipe",
 			cost: moneyCost?.value ?? 0,
 			buildings: [],
 			tools: []
