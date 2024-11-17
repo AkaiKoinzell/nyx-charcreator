@@ -191,6 +191,7 @@ export const AddItemForm = ({ initialState, itemLabels, manualSources }: AddItem
 						})
 					}}
 					mt="1em"
+					mb="1em"
 				/>
 				<FormLabel>Crafting Recipes</FormLabel>
 				<Flex direction="column">
@@ -208,6 +209,7 @@ export const AddItemForm = ({ initialState, itemLabels, manualSources }: AddItem
 								onClick={() => {
 									dispatch(removeRecipe(recipe.label ?? ""))
 								}}
+								mr="0.5em"
 							/>
 							<IconButton
 								colorScheme='blue'

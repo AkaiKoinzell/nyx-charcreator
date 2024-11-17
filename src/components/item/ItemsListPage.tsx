@@ -72,7 +72,8 @@ export const ItemsListPage = ({ items, owned, character }: ItemsListPageProps) =
                     item={it}
                     owned={!!owned ? owned[it.name] : undefined}
                     onLabelClick={id => setLabelFilter(id)} character={character}
-                    showControls={false}
+                    showEditButton={false}
+                    showDeleteButton={false}
                     onMouseEnter={() => {}}
                     controlsOnEdit={() => {}}
                 />)

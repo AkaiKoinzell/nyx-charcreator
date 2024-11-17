@@ -19,7 +19,7 @@ import {
 import { ItemDisplay } from "../../components/item/ItemDisplay";
 import { ErrorAlertWithNavigation } from "../../components/ui/ErrorAlertWithNavigation";
 import { StackedSkeleton } from "../../components/ui/StackedSkeleton";
-import {useGetSourcesQuery, useItemsPrefetch, useSearchItemsQuery} from "../../services/item"
+import { useGetSourcesQuery, useItemsPrefetch, useSearchItemsQuery } from "../../services/item"
 import { useGetLabelsQuery } from "../../services/label";
 import React, { useEffect, useState } from "react";
 import { LabelStub } from "../../models/label/LabelStub";
@@ -129,7 +129,8 @@ export const AllItemsPage = () => {
                 item={it}
                 onLabelClick={id => {onLabelChange(loadedLabels?.find(it => it.id === id))}}
                 onMouseEnter={() => { setCurrentItem(it) }}
-                showControls={roles.includes(Role.MANAGE_ITEMS)}
+                showEditButton={roles.includes(Role.MANAGE_ITEMS)}
+                showDeleteButton={roles.includes(Role.DELETE_ITEMS)}
                 controlsOnEdit={onOpen}
             />)}
             {pageStatus === QueryStatus.pending && <StackedSkeleton quantity={5} height="6vh"/> }

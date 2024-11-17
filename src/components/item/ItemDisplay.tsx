@@ -18,7 +18,7 @@ import {
     DrawerOverlay,
     Flex,
     Heading,
-    HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+    HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer,
     Stat,
     StatGroup,
     StatLabel,
@@ -44,7 +44,8 @@ interface ItemDisplayProps {
     owned?: number;
     onLabelClick?: (labelId: string) => void;
     character?: Character<any>
-    showControls: boolean
+    showEditButton: boolean
+    showDeleteButton: boolean
     controlsOnEdit: () => void
     onMouseEnter: () => void
 }
@@ -60,7 +61,7 @@ type Breakpoints = {
     materials: number
 }
 
-export const ItemDisplay = ({ item, owned, character, onLabelClick, showControls, controlsOnEdit, onMouseEnter }: ItemDisplayProps) => {
+export const ItemDisplay = ({ item, owned, character, onLabelClick, showEditButton, showDeleteButton, controlsOnEdit, onMouseEnter }: ItemDisplayProps) => {
     const size = useBreakpointValue<Breakpoints>({
         xl: { labels: 15, materials: 8 },
         lg: { labels: 10, materials: 7  },
@@ -163,13 +164,15 @@ export const ItemDisplay = ({ item, owned, character, onLabelClick, showControls
                         {it.map((itt, idd) => <CraftCard craftInfo={itt} index={id + idd + 1} key={id + idd + 1}/>)}
                     </HStack>
                 )}
-                {showControls && <Flex justifyContent="space-between" mt="1em">
-                    <Button colorScheme='blue' leftIcon={<EditIcon />} onClick={controlsOnEdit}>
+                {(showEditButton || showDeleteButton) && <Flex justifyContent="space-between" mt="1em">
+                    {showEditButton && <Button colorScheme='blue' leftIcon={<EditIcon />} onClick={controlsOnEdit}>
                         Update item
-                    </Button>
-                    <Button colorScheme='red' leftIcon={<DeleteIcon />} onClick={onDeleteOpen}>
+                    </Button>}
+                    {!showEditButton && <Spacer /> }
+                    {showDeleteButton && <Button colorScheme='red' leftIcon={<DeleteIcon />} onClick={onDeleteOpen}>
                         Delete item
-                    </Button>
+                    </Button>}
+                    {!showDeleteButton && <Spacer />}
                 </Flex>}
             </AccordionPanel>
         </AccordionItem>

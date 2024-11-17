@@ -26,7 +26,7 @@ export const TextInput = ({
     });
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-        const input = event.currentTarget.value.trim();
+        const input = event.currentTarget.value;
         const newValue = {
             value: input,
             isValid: !validator || validator(input),
