@@ -9,17 +9,17 @@ import {
     Container,
     StackDivider,
     useDisclosure,
-    HStack,
     FormControl,
     Tag,
     TagLabel,
     TagCloseButton,
-    Text, SpaceProps,
+    Text, SpaceProps, Flex, useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Label } from "../../../models/label/Label";
 import { FormValue } from "../../../models/form/FormValue";
 import { generateSkeletons } from "../../ui/StackedSkeleton";
+import {chunkArray} from "../../../utils/array-utils";
 
 interface LabelInputProps extends SpaceProps {
     label: string;
@@ -29,6 +29,16 @@ interface LabelInputProps extends SpaceProps {
     validator?: (input: Label[]) => boolean;
     invalidLabel?: string;
     defaultValue?: Label[];
+}
+
+export type Size = 'sm' | 'md' | 'lg' | 'xl' | 'base'
+
+const tagsForSize: Record<Size, { tags: number }> = {
+    xl: { tags: 10 },
+    lg: { tags: 8 },
+    md: { tags: 6 },
+    sm: { tags: 3 },
+    base: { tags: 3 },
 }
 
 export const LabelInput = ({
@@ -46,6 +56,9 @@ export const LabelInput = ({
         onOpen: popoverOpen,
         onClose: popoverClose,
     } = useDisclosure();
+    const size = useBreakpointValue<{ tags: number }>(tagsForSize, {
+        fallback: 'md',
+    })
     const [selectedLabels, setSelectedLabels] = useState<FormValue<Label[]>>({
         value: defaultValue ?? [],
         isValid: true,
@@ -107,6 +120,8 @@ export const LabelInput = ({
         });
     };
 
+    const labelRows = chunkArray(selectedLabels.value ?? [], size?.tags ?? 5)
+
     return (
         <FormControl {...style}>
             <FormLabel color={selectedLabels.isValid ? "" : "crimson"}>
@@ -158,24 +173,27 @@ export const LabelInput = ({
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>
-                <Container padding="0.5em">
-                    <HStack>
-                        {(selectedLabels.value ?? []).map((it) => (
-                            <Tag
-                                size="md"
-                                key={it.id}
-                                borderRadius="full"
-                                variant="solid"
-                                colorScheme="green"
-                            >
-                                <TagLabel>{it.name}</TagLabel>
-                                <TagCloseButton
-                                    onClick={() => handleLabelRemoval(it.id)}
-                                />
-                            </Tag>
-                        ))}
-                    </HStack>
-                </Container>
+                    <Flex flexDirection="column">
+                        {labelRows.map((labelRow, idx) => <Flex mt="0.5em" key={`row-${idx}`}>
+                            {labelRow.map((it) => (
+                                <Tag
+                                    size="md"
+                                    key={it.id}
+                                    borderRadius="full"
+                                    variant="solid"
+                                    colorScheme="green"
+                                    mr="0.5em"
+                                >
+                                    <TagLabel>{it.name}</TagLabel>
+                                    <TagCloseButton
+                                        onClick={() => handleLabelRemoval(it.id)}
+                                    />
+                                </Tag>
+                            ))}
+                        </Flex>)
+
+                        }
+                    </Flex>
             </Popover>
         </FormControl>
     );
