@@ -5,6 +5,8 @@ import {AllItemsTag, ItemsTagType, MaterialsTagType} from "./tags";
 import {ListOfIds} from "../models/response/ListOfIds";
 import { PaginatedList } from "../models/response/PaginatedList";
 import { SearchItemsParams } from "../models/request/SearchItemsParams";
+import {ItemUpdateDto} from "../models/dto/ItemUpdateDto";
+import {ManualSource} from "../models/item/ManualSource";
 
 export const itemApi = createApi({
     reducerPath: "itemApi",
@@ -48,15 +50,54 @@ export const itemApi = createApi({
                 headers: { "Content-type": "application/json" }
             }),
             providesTags: [AllItemsTag]
-        })
+        }),
+        createItem: build.mutation<void, Item>({
+            query: (payload: Item) => ({
+                url: "",
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+            }),
+            invalidatesTags: (_response, _error, payload) => [AllItemsTag]
+        }),
+        deleteItem: build.mutation<void, string>({
+            query: (payload: string) => ({
+                url: `/${payload}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (_response, _error, payload) => [AllItemsTag]
+        }),
+        updateItem: build.mutation<void, ItemUpdateDto>({
+            query: (payload: ItemUpdateDto) => ({
+                url: "",
+                method: "PUT",
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+            }),
+            invalidatesTags: (_response, _error, payload) => [AllItemsTag]
+        }),
+        getSources: build.query<ManualSource[], void>({
+            query: () => "/sources",
+            providesTags: [AllItemsTag]
+        }),
     }),
 });
 
 export const {
+    useCreateItemMutation,
+    useDeleteItemMutation,
     useGetItemsQuery,
+    useGetSourcesQuery,
     useGetItemsByIdsQuery,
     useLazyGetMaterialsByQuery,
-    useSearchItemsQuery
+    useSearchItemsQuery,
+    useUpdateItemMutation
 } = itemApi
 
 export const useItemsPrefetch = itemApi.usePrefetch;

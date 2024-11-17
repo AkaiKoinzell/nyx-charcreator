@@ -7,11 +7,13 @@ import { characterApi } from "../services/character";
 import { labelApi } from "../services/label";
 import { sessionApi } from "../services/session";
 import { itemApi } from "../services/item";
+import {recipesReducer} from "./recipes/recipes-slice";
 
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        recipes: recipesReducer,
         [guildApi.reducerPath]: guildApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [characterApi.reducerPath]: characterApi.reducer,

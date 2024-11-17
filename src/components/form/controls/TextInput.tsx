@@ -1,10 +1,11 @@
-import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
+import {FormControl, FormLabel, Input, SpaceProps, Text} from "@chakra-ui/react";
 import { FormValue } from "../../../models/form/FormValue";
-import { useState } from "react";
+import React, { useState } from "react";
 
-export type TextInputProps = {
+export interface TextInputProps extends SpaceProps {
     label: string;
     placeholder: string;
+    defaultValue?: string;
     validator?: (input?: string) => boolean;
     valueConsumer?: (value: FormValue<string>) => void;
     invalidLabel?: string;
@@ -14,11 +15,13 @@ export const TextInput = ({
     label,
     placeholder,
     validator,
+    defaultValue,
     valueConsumer,
-    invalidLabel
+    invalidLabel,
+    ...style
 }: TextInputProps) => {
     const [value, setValue] = useState<FormValue<string>>({
-        value: undefined,
+        value: defaultValue,
         isValid: true,
     });
 
@@ -35,13 +38,14 @@ export const TextInput = ({
     };
 
     return (
-        <FormControl>
+        <FormControl {...style}>
             <FormLabel color={value.isValid ? "" : "crimson"}>{label}</FormLabel>
             <Input
                 placeholder={placeholder}
                 borderColor={value.isValid ? "" : "crimson"}
                 borderWidth={value.isValid ? "" : "2px"}
                 onChange={handleChange}
+                value={value.value ?? ''}
             />
             {!value.isValid && !!invalidLabel && <Text fontSize='sm' color="crimson">{invalidLabel}</Text>}
         </FormControl>

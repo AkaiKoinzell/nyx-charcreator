@@ -6,23 +6,53 @@ import {
     AccordionItem,
     AccordionPanel,
     Badge,
-    Box, Button, Card, CardBody, Container, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Heading,
-    HStack, Stat, StatGroup, StatLabel, StatNumber, useBreakpointValue, useDisclosure
+    Box,
+    Button,
+    Card,
+    CardBody,
+    Container,
+    Drawer,
+    DrawerBody,
+    DrawerContent,
+    DrawerHeader,
+    DrawerOverlay,
+    Flex,
+    Heading,
+    HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+    Stat,
+    StatGroup,
+    StatLabel,
+    StatNumber, Text,
+    useBreakpointValue,
+    useDisclosure, VStack
 } from "@chakra-ui/react";
 import {chunkArray} from "../../utils/array-utils";
 import {CraftRequirement} from "../../models/item/CraftRequirement";
 import {generateSkeletons} from "../ui/StackedSkeleton";
-import {useLazyGetMaterialsByQuery} from "../../services/item";
+import {useDeleteItemMutation, useLazyGetMaterialsByQuery} from "../../services/item";
 import {useEffect, useState} from "react";
-import {ChevronLeftIcon, ChevronRightIcon} from "@chakra-ui/icons";
+import {ChevronLeftIcon, ChevronRightIcon, DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import { Character } from "../../models/character/Character";
 import { BuySellCard } from "./BuySellCard";
+import {LoadingModal} from "../ui/LoadingModal";
+import {QueryStatus} from "@reduxjs/toolkit/query";
+import {ErrorAlertWithNavigation} from "../ui/ErrorAlertWithNavigation";
+import {SuccessAlertWithNavigation} from "../ui/SuccessAlertWithNaviagion";
 
 interface ItemDisplayProps {
     item: Item;
     owned?: number;
     onLabelClick?: (labelId: string) => void;
     character?: Character<any>
+    showControls: boolean
+    controlsOnEdit: () => void
+    onMouseEnter: () => void
+}
+
+interface DeleteItemModalProps {
+    item: Item;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
 type Breakpoints = {
@@ -30,7 +60,7 @@ type Breakpoints = {
     materials: number
 }
 
-export const ItemDisplay = ({ item, owned, character, onLabelClick }: ItemDisplayProps) => {
+export const ItemDisplay = ({ item, owned, character, onLabelClick, showControls, controlsOnEdit, onMouseEnter }: ItemDisplayProps) => {
     const size = useBreakpointValue<Breakpoints>({
         xl: { labels: 15, materials: 8 },
         lg: { labels: 10, materials: 7  },
@@ -44,6 +74,7 @@ export const ItemDisplay = ({ item, owned, character, onLabelClick }: ItemDispla
     const [materialsIndex, setMaterialsIndex] = useState(0)
     const [trigger, result] = useLazyGetMaterialsByQuery()
     const {isOpen, onOpen, onClose} = useDisclosure()
+    const {isOpen: deleteIsOpen, onOpen: onDeleteOpen, onClose: onDeleteClose} = useDisclosure()
 
     const openSourcePage = !!item.link
         ? () => { window.open(item.link!) }
@@ -61,7 +92,7 @@ export const ItemDisplay = ({ item, owned, character, onLabelClick }: ItemDispla
         }
     }, [result])
 
-    let labels = item.labels.length > 0
+    let labels = !!item.labels && item.labels.length > 0
         ? chunkArray(item.labels.map(it => <Badge key={it.id} onClick={!!onLabelClick ? () => {onLabelClick(it.id)} : undefined}>{it.name}</Badge>), size?.labels ?? 5)
         : []
 
@@ -75,7 +106,7 @@ export const ItemDisplay = ({ item, owned, character, onLabelClick }: ItemDispla
         : null
 
     return <>
-        <Accordion allowToggle minWidth="100%">
+        <Accordion allowToggle minWidth="100%" onMouseEnter={onMouseEnter}>
         <AccordionItem onClick={onAccordionOpen}>
             <h2>
                 <AccordionButton>
@@ -132,6 +163,14 @@ export const ItemDisplay = ({ item, owned, character, onLabelClick }: ItemDispla
                         {it.map((itt, idd) => <CraftCard craftInfo={itt} index={id + idd + 1} key={id + idd + 1}/>)}
                     </HStack>
                 )}
+                {showControls && <Flex justifyContent="space-between" mt="1em">
+                    <Button colorScheme='blue' leftIcon={<EditIcon />} onClick={controlsOnEdit}>
+                        Update item
+                    </Button>
+                    <Button colorScheme='red' leftIcon={<DeleteIcon />} onClick={onDeleteOpen}>
+                        Delete item
+                    </Button>
+                </Flex>}
             </AccordionPanel>
         </AccordionItem>
     </Accordion>
@@ -139,12 +178,13 @@ export const ItemDisplay = ({ item, owned, character, onLabelClick }: ItemDispla
         <DrawerOverlay />
         <DrawerContent>
             <DrawerHeader borderBottomWidth='1px'>Labels of {item.name}</DrawerHeader>
-            <DrawerBody>{item.labels.map(it => <Badge key={it.id} margin="0.5em" _hover={{ cursor: "pointer"}} onClick={!!onLabelClick ? () => {
+            <DrawerBody>{item.labels?.map(it => <Badge key={it.id} margin="0.5em" _hover={{ cursor: "pointer"}} onClick={!!onLabelClick ? () => {
                 onLabelClick(it.id)
                 onClose()
-            } : undefined}>{it.name}</Badge>)}</DrawerBody>
+            } : undefined}>{it.name}</Badge>) ?? []}</DrawerBody>
         </DrawerContent>
     </Drawer>
+    <DeleteItemModal item={item} isOpen={deleteIsOpen} onClose={onDeleteClose}/>
     </>
 }
 
@@ -192,4 +232,47 @@ const CraftCard = ({craftInfo, index}: CraftCardProps) => {
             </Stat>}
         </CardBody>
     </Card>
+}
+
+const DeleteItemModal = ({ item, isOpen, onClose }: DeleteItemModalProps) => {
+    const [deleteItem, { status, error }] = useDeleteItemMutation();
+    return <>
+        <LoadingModal
+            show={status === QueryStatus.pending}
+            title="Deleting item..."
+        />
+        <ErrorAlertWithNavigation
+            show={status === QueryStatus.rejected}
+            description={JSON.stringify(error)}
+        />
+        <SuccessAlertWithNavigation
+            show={status === QueryStatus.fulfilled}
+            navigateTo={`/item/list`}
+        />
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Delete {item.name}</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                    <VStack>
+                        <Text>
+                            Do you want to delete <Text as="span" fontWeight="bold">{item.name}</Text>?.
+                            This operation cannot be undone.
+                        </Text>
+                        <Text fontWeight="bold">Warning: This operation cannot be undone.</Text>
+                    </VStack>
+                </ModalBody>
+
+                <ModalFooter>
+                    <Button colorScheme="red" leftIcon={<DeleteIcon />} mr={3} onClick={() => {
+                        deleteItem(item.name);
+                        onClose();
+                    }}>I understand, delete
+                    </Button>
+                    <Button colorScheme='gray' onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    </>
 }

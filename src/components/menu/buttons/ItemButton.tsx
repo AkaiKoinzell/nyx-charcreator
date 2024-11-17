@@ -3,8 +3,9 @@ import { Menu, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useItemsPrefetch } from "../../../services/item";
 import { useLabelPrefetch } from "../../../services/label";
+import {Role} from "../../../utils/jwt-utils";
 
-export const ItemButton = () => {
+export const ItemButton = ({ roles, backgroundColor }: { roles: Role[], backgroundColor: string }) => {
     const prefetchPaginatedItems = useItemsPrefetch("searchItems")
     const prefetchAllLabels = useLabelPrefetch("getLabels")
     return (
@@ -12,7 +13,7 @@ export const ItemButton = () => {
             <MenuButton
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
-                background="rgb(255, 255, 255, 0.7)"
+                background={ backgroundColor }
                 backdropFilter="saturate(180%) blur(5px)"
                 borderRadius='0'
                 onMouseEnter={() => {
@@ -25,6 +26,7 @@ export const ItemButton = () => {
             </MenuButton>
             <MenuList>
                 <Link to="/item/list"><MenuItem>Items List</MenuItem></Link>
+                {roles.includes(Role.MANAGE_ITEMS) &&<Link to="/item/add"><MenuItem>Add an Item</MenuItem></Link>}
             </MenuList>
         </Menu>
     );

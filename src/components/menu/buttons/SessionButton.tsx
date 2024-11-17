@@ -3,13 +3,13 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Role } from "../../../utils/jwt-utils";
 
-export const SessionButton = ({ roles }: { roles: Role[] }) => {
+export const SessionButton = ({ roles, backgroundColor }: { roles: Role[], backgroundColor: string }) => {
     return (
         <Menu>
             <MenuButton
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
-                background="rgb(255, 255, 255, 0.7)"
+                background={backgroundColor}
                 backdropFilter="saturate(180%) blur(5px)"
                 borderRadius='0'
             >
