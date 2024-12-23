@@ -6,6 +6,7 @@ import { AvatarIcon } from "./AvatarIcon";
 import React from "react";
 import { CharacterButton } from "./buttons/CharacterButton";
 import { ItemButton } from "./buttons/ItemButton";
+import {hasRole} from "../../utils/role-utils";
 
 export const TopMenu = ({ roles }: { roles: Role[] }) => {
     const { colorMode } = useColorMode()
@@ -24,7 +25,7 @@ export const TopMenu = ({ roles }: { roles: Role[] }) => {
             backdropFilter="saturate(180%) blur(5px)"
         >
             <SessionButton roles={roles} backgroundColor={backgroundColor} />
-            {roles.includes(Role.MANAGE_CHARACTERS) && <CharacterButton backgroundColor={backgroundColor}/>}
+            {hasRole(roles, Role.MANAGE_CHARACTERS) && <CharacterButton backgroundColor={backgroundColor}/>}
             <ItemButton roles={roles} backgroundColor={backgroundColor}/>
             <Box position="absolute" right="2vw" paddingTop="0.25em">
                 <AvatarIcon user={member} />

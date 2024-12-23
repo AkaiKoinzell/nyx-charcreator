@@ -16,6 +16,7 @@ export const CharacterButton = ({ backgroundColor }: { backgroundColor: string }
             </MenuButton>
             <MenuList>
             <Link to="/character/update"><MenuItem>Update Character</MenuItem></Link>
+            <Link to="/character/giveRandomItem"><MenuItem>Give a Random Item</MenuItem></Link>
             </MenuList>
         </Menu>
     );

@@ -32,6 +32,7 @@ import {roleSelector} from "../../store/auth/auth-slice";
 import {Role} from "../../utils/jwt-utils";
 import {Item} from "../../models/item/Item";
 import {AddItemForm} from "../../components/form/item/AddItemForm";
+import {hasRole} from "../../utils/role-utils";
 
 export const AllItemsPage = () => {
     const pageSize = 10;
@@ -129,8 +130,8 @@ export const AllItemsPage = () => {
                 item={it}
                 onLabelClick={id => {onLabelChange(loadedLabels?.find(it => it.id === id))}}
                 onMouseEnter={() => { setCurrentItem(it) }}
-                showEditButton={roles.includes(Role.MANAGE_ITEMS)}
-                showDeleteButton={roles.includes(Role.DELETE_ITEMS)}
+                showEditButton={hasRole(roles, Role.MANAGE_ITEMS)}
+                showDeleteButton={hasRole(roles, Role.DELETE_ITEMS)}
                 controlsOnEdit={onOpen}
             />)}
             {pageStatus === QueryStatus.pending && <StackedSkeleton quantity={5} height="6vh"/> }

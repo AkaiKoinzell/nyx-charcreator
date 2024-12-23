@@ -10,6 +10,7 @@ import { AddErrataPage } from "./pages/errata/AddErrataPage";
 import { ListSessionsPage } from './pages/sessions/ListSessionsPage';
 import { AllItemsPage } from './pages/items/AllItemsPage';
 import {AddItemPage} from "./pages/items/AddItemPage";
+import {GiveRandomItemPage} from "./pages/characters/GiveRandomItemPage";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,8 @@ const router = createBrowserRouter([
         path: "character",
         element: <AuthenticatedLayout />,
         children: [
-          { path: "update", element: <AddErrataPage /> }
+          { path: "update", element: <AddErrataPage /> },
+          { path: "giveRandomItem", element: <GiveRandomItemPage /> },
         ]
       },
       {

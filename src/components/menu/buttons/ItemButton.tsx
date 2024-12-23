@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useItemsPrefetch } from "../../../services/item";
 import { useLabelPrefetch } from "../../../services/label";
 import {Role} from "../../../utils/jwt-utils";
+import {hasRole} from "../../../utils/role-utils";
 
 export const ItemButton = ({ roles, backgroundColor }: { roles: Role[], backgroundColor: string }) => {
     const prefetchPaginatedItems = useItemsPrefetch("searchItems")
@@ -26,7 +27,7 @@ export const ItemButton = ({ roles, backgroundColor }: { roles: Role[], backgrou
             </MenuButton>
             <MenuList>
                 <Link to="/item/list"><MenuItem>Items List</MenuItem></Link>
-                {roles.includes(Role.MANAGE_ITEMS) &&<Link to="/item/add"><MenuItem>Add an Item</MenuItem></Link>}
+                {hasRole(roles, Role.MANAGE_ITEMS) &&<Link to="/item/add"><MenuItem>Add an Item</MenuItem></Link>}
             </MenuList>
         </Menu>
     );

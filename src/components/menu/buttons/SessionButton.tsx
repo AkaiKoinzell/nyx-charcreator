@@ -2,6 +2,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Role } from "../../../utils/jwt-utils";
+import {hasRole} from "../../../utils/role-utils";
 
 export const SessionButton = ({ roles, backgroundColor }: { roles: Role[], backgroundColor: string }) => {
     return (
@@ -17,7 +18,7 @@ export const SessionButton = ({ roles, backgroundColor }: { roles: Role[], backg
             </MenuButton>
             <MenuList>
                 <Link to="/session/list"><MenuItem>List Sessions</MenuItem></Link>
-                {roles.includes(Role.MANAGE_SESSIONS) &&<Link to="/session/insert"><MenuItem>Insert Session</MenuItem></Link>}
+                {hasRole(roles, Role.MANAGE_SESSIONS) && <Link to="/session/insert"><MenuItem>Insert Session</MenuItem></Link>}
             </MenuList>
         </Menu>
     );
