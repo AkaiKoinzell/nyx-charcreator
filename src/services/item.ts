@@ -8,6 +8,7 @@ import { SearchItemsParams } from "../models/request/SearchItemsParams";
 import {ItemUpdateDto} from "../models/dto/ItemUpdateDto";
 import {ManualSource} from "../models/item/ManualSource";
 import {LabelStub} from "../models/label/LabelStub";
+import {Character} from "../models/character/Character";
 
 export const itemApi = createApi({
 	reducerPath: "itemApi",
@@ -96,6 +97,10 @@ export const itemApi = createApi({
 			query: () => "/sources",
 			providesTags: [AllItemsTag]
 		}),
+		findUsage: build.query<Character<string>[], {item: string, onlyActive: boolean}>({
+			query: (params) => `/${params.item}/usage?onlyActive=${params.onlyActive}`,
+			providesTags: [AllItemsTag]
+		}),
 	}),
 });
 
@@ -106,9 +111,10 @@ export const {
 	useGetSourcesQuery,
 	useGetItemsByIdsQuery,
 	useLazyGetMaterialsByQuery,
+	useLazyFindUsageQuery,
 	useLazyListItemIdsQuery,
 	useSearchItemsQuery,
-	useUpdateItemMutation
+	useUpdateItemMutation,
 } = itemApi
 
 export const useItemsPrefetch = itemApi.usePrefetch;
