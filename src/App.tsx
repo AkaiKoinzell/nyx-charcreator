@@ -12,6 +12,7 @@ import { AllItemsPage } from './pages/items/AllItemsPage';
 import {AddItemPage} from "./pages/items/AddItemPage";
 import {GiveRandomItemPage} from "./pages/characters/GiveRandomItemPage";
 import {ItemUsagePage} from "./pages/items/ItemUsagePage";
+import {SessionsStatsPage} from "./pages/sessions/SessionsStatsPage";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,8 @@ const router = createBrowserRouter([
         element: <AuthenticatedLayout />,
         children: [
           { path: "list", element: <ListSessionsPage /> },
-          { path: "insert", element: <InsertSessionPage /> }
+          { path: "insert", element: <InsertSessionPage /> },
+          { path: "stats", element: <SessionsStatsPage /> }
         ]
       },
       {
