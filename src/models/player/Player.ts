@@ -1,5 +1,6 @@
 export interface Player {
-    playerId: string;
-    name: string;
-    dateJoined: number | null;
+	playerId: string;
+	name: string;
+	dateJoined: number | null;
+	masterSince: number | null;
 }

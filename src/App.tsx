@@ -14,6 +14,7 @@ import {GiveRandomItemPage} from "./pages/characters/GiveRandomItemPage";
 import {ItemUsagePage} from "./pages/items/ItemUsagePage";
 import {SessionsStatsPage} from "./pages/sessions/SessionsStatsPage";
 import {AllCharactersPage} from "./pages/characters/AllCharactersPage";
+import {AllPlayersPage} from "./pages/players/AllPlayersPage";
 
 const router = createBrowserRouter([
 	{
@@ -45,6 +46,13 @@ const router = createBrowserRouter([
 					{ path: "update", element: <AddErrataPage /> },
 					{ path: "giveRandomItem", element: <GiveRandomItemPage /> },
 					{ path: "all", element: <AllCharactersPage /> },
+				]
+			},
+			{
+				path: "player",
+				element: <AuthenticatedLayout />,
+				children: [
+					{ path: "all", element: <AllPlayersPage /> },
 				]
 			},
 			{

@@ -1,9 +1,10 @@
 import {useGetAllActiveCharactersQuery} from "../../services/character";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {Character} from "../../models/character/Character";
 import {
 	Flex,
 	Grid,
-	GridItem,
-	Icon,
+	GridItem, Icon,
 	Input,
 	InputGroup,
 	InputLeftAddon,
@@ -11,26 +12,35 @@ import {
 	Spinner,
 	Text
 } from "@chakra-ui/react";
-import {CharacterRow} from "../../components/character/CharacterRow";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {Character, exp} from "../../models/character/Character";
 import {SearchIcon, TriangleDownIcon, TriangleUpIcon} from "@chakra-ui/icons";
+import {playersToCharacters} from "../../utils/player-utils";
+import {useGetPlayersQuery} from "../../services/player";
+import {Player} from "../../models/player/Player";
+import {PlayerRow} from "../../components/player/PlayerRow";
 
-export const AllCharactersPage = () => {
+export const AllPlayersPage = () => {
 	const { data: characters } = useGetAllActiveCharactersQuery()
-	const playerToCharacters = useMemo(() => {
-
-	}, [])
-	const [sortedCharacters, setSortedCharacters] = useState<Character<string>[]>([])
+	const pTC: {[key: string]: Character<string>[]} = useMemo(() => {
+		if (characters != null) {
+			return playersToCharacters(characters)
+		} else {
+			return {}
+		}
+	}, [characters])
+	const { data: players } = useGetPlayersQuery(
+		Object.keys(pTC),
+		{ skip: Object.keys(pTC).length === 0 }
+	)
+	const [sortedPlayers, setSortedPlayers] = useState<Player[]>([])
 	const [sortProperty, setSortProperty] = useState<{ prop: string, dir: number } | undefined>(undefined)
 	const [isTyping, setIsTyping] = useState(false);
 	const [query, setQuery] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
-		if (characters != null) {
-			setSortedCharacters([...characters])
+		if (players != null) {
+			setSortedPlayers([...players])
 		}
-	}, [characters])
+	}, [players])
 
 	const onChangeFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if(e.target.value.trim().length > 0) {
@@ -45,12 +55,21 @@ export const AllCharactersPage = () => {
 			? { prop: property, dir: sortProperty.dir * -1 }
 			: { prop: property, dir: 1 }
 		setSortProperty(newParams)
-		setSortedCharacters(current => current.sort((a, b) => {
-			// @ts-ignore
-			const valA: string | number = property === "exp" || property === "lvl" ? exp(a) : (a[property] ?? 0)
-			// @ts-ignore
-			const valB: string | number = property === "exp" || property === "lvl" ? exp(b) : (b[property] ?? 0)
-
+		setSortedPlayers(current => current.sort((a, b) => {
+			const valA: string | number = property === "lastActivity"
+				? (pTC[a.playerId] ?? []).reduce((p, c) => {
+					let lastCharActivity = (c.lastMastered ?? 0) > (c.lastPlayed ?? 0) ? (c.lastMastered ?? 0) : (c.lastPlayed ?? 0)
+					return lastCharActivity > p ? lastCharActivity : p
+				}, 0)
+				// @ts-ignore
+				: (a[property] ?? 0)
+			const valB: string | number = property === "lastActivity"
+				? (pTC[b.playerId] ?? []).reduce((p, c) => {
+					let lastCharActivity = (c.lastMastered ?? 0) > (c.lastPlayed ?? 0) ? (c.lastMastered ?? 0) : (c.lastPlayed ?? 0)
+					return lastCharActivity > p ? lastCharActivity : p
+				}, 0)
+				// @ts-ignore
+				: (b[property] ?? 0)
 
 			if (typeof valA === "number" && typeof valB === "number") {
 				return (valA - valB) * newParams.dir
@@ -66,19 +85,19 @@ export const AllCharactersPage = () => {
 		setIsTyping(true);
 		const timeoutId = setTimeout(() => {
 			if(query != null && query.length >= 1) {
-				setSortedCharacters(current => current.filter(it => {
+				setSortedPlayers(current => current.filter(it => {
 					const parsedQuery = query.toLowerCase().replace(" ", "")
 					const parsedName = it.name.toLowerCase().replace(" ", "")
 					return parsedName.includes(parsedQuery)
 				}))
-			} else if (characters != null) {
-				setSortedCharacters([...characters])
+			} else if (players != null) {
+				setSortedPlayers([...players])
 			}
 			setIsTyping(false);
 		}, 300);
 
 		return () => clearTimeout(timeoutId)
-	}, [characters, query])
+	}, [players, query])
 
 	return (<Flex mr="2em" ml="2em" direction="column">
 		<InputGroup mb="1em">
@@ -86,7 +105,7 @@ export const AllCharactersPage = () => {
 			<Input id="item-search-bar" placeholder="Search" minWidth="75vw" onChange={onChangeFilter}/>
 			{isTyping && <InputRightElement><Spinner /></InputRightElement>}
 		</InputGroup>
-		<Grid templateColumns='repeat(6, 1fr)' gap={6}>
+		<Grid templateColumns='repeat(5, 1fr)' gap={6}>
 			<GridItem>
 				<Flex align="center">
 					<Text
@@ -106,11 +125,11 @@ export const AllCharactersPage = () => {
 						as="b"
 						fontSize="xl"
 						_hover={{ cursor: "pointer" }}
-						onClick={() => onSort("created")}
+						onClick={() => onSort("dateJoined")}
 						mr="0.5em"
-					>Created</Text>
-					{ sortProperty?.prop === "created" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
-					{ sortProperty?.prop === "created" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
+					>Date Joined</Text>
+					{ sortProperty?.prop === "dateJoined" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
+					{ sortProperty?.prop === "dateJoined" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
 				</Flex>
 			</GridItem>
 			<GridItem>
@@ -119,11 +138,11 @@ export const AllCharactersPage = () => {
 						as="b"
 						fontSize="xl"
 						_hover={{ cursor: "pointer" }}
-						onClick={() => onSort("exp")}
+						onClick={() => onSort("lastActivity")}
 						mr="0.5em"
-					>Exp</Text>
-					{ sortProperty?.prop === "exp" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
-					{ sortProperty?.prop === "exp" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
+					>Last Activity</Text>
+					{ sortProperty?.prop === "lastActivity" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
+					{ sortProperty?.prop === "lastActivity" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
 				</Flex>
 			</GridItem>
 			<GridItem>
@@ -131,12 +150,8 @@ export const AllCharactersPage = () => {
 					<Text
 						as="b"
 						fontSize="xl"
-						_hover={{ cursor: "pointer" }}
-						onClick={() => onSort("lvl")}
 						mr="0.5em"
-					>Level</Text>
-					{ sortProperty?.prop === "lvl" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
-					{ sortProperty?.prop === "lvl" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
+					>Active Characters</Text>
 				</Flex>
 			</GridItem>
 			<GridItem>
@@ -144,28 +159,11 @@ export const AllCharactersPage = () => {
 					<Text
 						as="b"
 						fontSize="xl"
-						_hover={{ cursor: "pointer" }}
-						onClick={() => onSort("money")}
 						mr="0.5em"
-					>Money</Text>
-					{ sortProperty?.prop === "money" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
-					{ sortProperty?.prop === "money" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
+					>Master</Text>
 				</Flex>
 			</GridItem>
-			<GridItem>
-				<Flex align="center">
-					<Text
-						as="b"
-						fontSize="xl"
-						_hover={{ cursor: "pointer" }}
-						onClick={() => onSort("lastPlayed")}
-						mr="0.5em"
-					>Last Played</Text>
-					{ sortProperty?.prop === "lastPlayed" && sortProperty.dir === 1 && <Icon as={TriangleUpIcon} boxSize={4} />}
-					{ sortProperty?.prop === "lastPlayed" && sortProperty.dir === -1 && <Icon as={TriangleDownIcon} boxSize={4} />}
-				</Flex>
-			</GridItem>
-			{sortedCharacters.map(it => <CharacterRow key={it.id} character={it} />)}
+			{sortedPlayers.map(it => <PlayerRow key={it.playerId} player={it} characters={pTC[it.playerId] ?? []} />)}
 		</Grid>
 	</Flex>)
 }

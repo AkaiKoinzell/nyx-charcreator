@@ -1,4 +1,4 @@
-import {Avatar, Card, CardHeader, Flex, GridItem, Heading, Stat, StatLabel, StatNumber, Text} from "@chakra-ui/react";
+import {Avatar, Flex, GridItem, Heading, Stat, StatNumber, Text} from "@chakra-ui/react";
 import {Character, exp} from "../../models/character/Character";
 import React from "react";
 import {useGetCharacterTokenQuery} from "../../services/character";
