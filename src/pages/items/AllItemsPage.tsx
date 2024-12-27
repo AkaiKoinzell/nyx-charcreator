@@ -108,22 +108,22 @@ export const AllItemsPage = () => {
 		<ErrorAlertWithNavigation show={!!pageError} navigateTo="/user" />
 		{!page && <StackedSkeleton quantity={5} height="5vh"/>}
 		{!!page && <VStack alignItems="left">
-            <Stack direction={{base: "column", sm: "row"}}>
+			<Stack direction={{base: "column", sm: "row"}}>
 				{!loadedLabels && !labelsError && <Container minWidth="10vw"><Skeleton height="4vh"/></Container>}
 				{!!labelsError && <Alert status="error" height="4.5vh"><AlertIcon />Cannot load labels</Alert>}
 				{!!loadedLabels && !labelFilter && <Select placeholder="Filter by label" id="label-placeholder" onChange={onSelectChange}>
 					{[...loadedLabels].sort((a,b) => a.name.localeCompare(b.name)).map(it => <option key={it.id} id={it.id}>{it.name}</option>)}
-                </Select>}
+				</Select>}
 				{!!loadedLabels && !!labelFilter && <Alert status="success" height="4.5vh"><CloseButton
-                    position='relative'
-                    left={-2}
-                    onClick={() => {onLabelChange(undefined)}}
-                />{loadedLabels.find(it => it.id === labelFilter.id)?.name}</Alert>}
-                <InputGroup>
+					position='relative'
+					left={-2}
+					onClick={() => {onLabelChange(undefined)}}
+				/>{loadedLabels.find(it => it.id === labelFilter.id)?.name}</Alert>}
+				<InputGroup>
 					<InputLeftAddon><SearchIcon /></InputLeftAddon>
 					<Input id="item-search-bar" placeholder="Search" minWidth="75vw" onChange={onChangeFilter}/>
 					{isTyping && <InputRightElement><Spinner /></InputRightElement>}
-                </InputGroup>
+				</InputGroup>
             </Stack>
 			{pageStatus === QueryStatus.fulfilled && page.entities.map(it => <ItemDisplay
 				key={it.name}

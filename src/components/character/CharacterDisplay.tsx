@@ -4,23 +4,23 @@ import {CharacterInventory} from "./CharacterInventory";
 import {CharacterInfo} from "./CharacterInfo";
 
 interface CharacterProps {
-    character: Character<string>
+	character: Character<string>
 }
 
 export const CharacterDisplay = ({ character }: CharacterProps) => {
-    return <Tabs>
-        <TabList>
-            <Tab>Info</Tab>
-            <Tab>Inventory</Tab>
-        </TabList>
+	return <Tabs>
+		<TabList>
+			<Tab>Info</Tab>
+			<Tab>Inventory</Tab>
+		</TabList>
 
-        <TabPanels>
-            <TabPanel>
-                <CharacterInfo character={character} />
-            </TabPanel>
-            <TabPanel>
-                <CharacterInventory character={character} />
-            </TabPanel>
-        </TabPanels>
-    </Tabs>
+		<TabPanels>
+			<TabPanel>
+				<CharacterInfo character={character} />
+			</TabPanel>
+			<TabPanel>
+				<CharacterInventory character={character} />
+			</TabPanel>
+		</TabPanels>
+	</Tabs>
 }

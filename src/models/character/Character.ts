@@ -31,4 +31,4 @@ export interface Character<P> {
     labels: LabelStub[];
 }
 
-export const exp = (c: Character<any>) => c.masterMS + c.pbcMS + c.errataMS + c.sessionMS
+export const exp = (c: Character<any>) => (c.masterMS ?? 0) + (c.pbcMS ?? 0) + (c.errataMS ?? 0) + (c.sessionMS ?? 0)

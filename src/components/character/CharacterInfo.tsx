@@ -1,7 +1,7 @@
 import { Character } from "../../models/character/Character";
 import { Alert, AlertIcon, AlertTitle, Avatar, AvatarBadge, Button, FormControl, FormErrorMessage, HStack, Heading, Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SkeletonCircle, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { MdEdit } from "react-icons/md";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetCharacterTokenQuery, useUpdateCharacterTokenMutation } from "../../services/character";
 import { QueryStatus } from "@reduxjs/toolkit/query";
 import { GiPunch } from "react-icons/gi";
@@ -122,7 +122,7 @@ const UploadBadge = ({ character, isOpen, onOpen, onClose }: UploadBadgeProps) =
 	</>
 }
 
-const fallbackIcons: JSX.Element[] = [
+const fallbackIcons = [
 	<GiPunch fontSize="2em"/>,
 	<FaHatWizard fontSize="1.6em"/>,
 	<LuSwords fontSize="1.8em"/>,
@@ -131,6 +131,6 @@ const fallbackIcons: JSX.Element[] = [
 	<GiMagicSwirl fontSize="2em"/>
 ]
 
-function randomCharacterIcon(): JSX.Element {
+function randomCharacterIcon() {
 	return fallbackIcons[Math.floor(Math.random() * fallbackIcons.length)];
 }
