@@ -9,51 +9,51 @@ import {useEffect, useState} from "react";
 import {AddErrataDto} from "../../models/character/errata/AddErrataDto";
 
 export const AddErrataPage = () => {
-    const { data: activeCharacters, error: activeCharactersError } =
-        useGetAllActiveCharactersWithPlayerQuery();
-    const [addErrata, { status, error }] = useAddErrataMutation();
+	const { data: activeCharacters, error: activeCharactersError } =
+		useGetAllActiveCharactersWithPlayerQuery();
+	const [addErrata, { error, isLoading, isSuccess, isError }] = useAddErrataMutation();
 
-    const [formValues, setFormValues] = useState<AddErrataDto | undefined>(undefined);
+	const [formValues, setFormValues] = useState<AddErrataDto | undefined>(undefined);
 
-    useEffect(() => {
-        if (!!formValues) {
-            addErrata(formValues)
-                .unwrap()
-                .then(
-                    () => {
-                        console.log("ok");
-                    },
-                    (e) => {
-                        console.log(e);
-                    }
-                );
-        }
-    }, [formValues, addErrata]);
+	useEffect(() => {
+		if (!!formValues) {
+			addErrata(formValues)
+				.unwrap()
+				.then(
+					() => {
+						console.log("ok");
+					},
+					(e) => {
+						console.log(e);
+					}
+				);
+		}
+	}, [formValues, addErrata]);
 
-    return <Center>
-        <ErrorAlertWithNavigation
-            show={!!activeCharactersError}
-            navigateTo="/user"
-        />
-        <LoadingModal
-            show={status === QueryStatus.pending}
-            title="Updating character..."
-        />
-        <ErrorAlertWithNavigation
-            show={status === QueryStatus.rejected}
-            description={JSON.stringify(error)}
-        />
-        <SuccessAlertWithNavigation
-            show={status === QueryStatus.fulfilled}
-            navigateTo="/user"
-        />
-        {!activeCharactersError && (
-            <AddErrataForm
-                characters={activeCharacters}
-                submitForm={(form: AddErrataDto) => {
-                    setFormValues(form);
-                }}
-            />
-        )}
-    </Center>
+	return <Center>
+		<ErrorAlertWithNavigation
+			show={!!activeCharactersError}
+			navigateTo="/user"
+		/>
+		<LoadingModal
+			show={isLoading}
+			title="Updating character..."
+		/>
+		<ErrorAlertWithNavigation
+			show={isError}
+			description={JSON.stringify(error)}
+		/>
+		<SuccessAlertWithNavigation
+			show={isSuccess}
+			navigateTo="/user"
+		/>
+		{!activeCharactersError && (
+			<AddErrataForm
+				characters={activeCharacters}
+				submitForm={(form: AddErrataDto) => {
+					setFormValues(form);
+				}}
+			/>
+		)}
+	</Center>
 }

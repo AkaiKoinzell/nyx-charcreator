@@ -10,54 +10,60 @@ import { Player } from "../models/player/Player";
 import { CountDto } from "../models/dto/CountDto";
 
 export const sessionApi = createApi({
-    reducerPath: "sessionApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.REACT_APP_KAIRON_API_URL}/session`,
-        mode: "cors",
-        prepareHeaders: async (headers, api) => {
-            const {
-                auth: { jwt },
-            } = api.getState() as { auth: AuthState };
-            headers.set("Authorization", `Bearer ${jwt}`);
-            headers.set("Access-Control-Allow-Origin", "*");
-        },
-    }),
-    tagTypes: [SessionsTagType],
-    endpoints: (build) => ({
-        registerSession: build.mutation<StatusResponse, SessionRegistrationDto>({
-            query: (sessionRegistrationDto: SessionRegistrationDto) => ({
-                url: ``,
-                method: "POST",
-                body: JSON.stringify(sessionRegistrationDto),
-                headers: {
-                     "Content-type": "application/json",
-                     "Access-Control-Allow-Origin": "*"
-                }
-            }),
-            invalidatesTags: [AllSessionsTag, SessionsCountTag]
-        }),
-        getSessionsCount: build.query<CountDto, void>({
-            query: () => `/count`,
-            providesTags: [SessionsCountTag]
-        }),
-        getPaginatedSessions: build.query<PaginatedList<Session<Player>>, PaginatedRequestParams>({
-            query: (params: PaginatedRequestParams) => 
-                `?ts=${new Date().getTime()}${!!params.limit ? `&limit=${params.limit}`: ''}${!!params.nextAt ? `&nextAt=${params.nextAt}`: ''}`,
-            providesTags: [AllSessionsTag]
-        }),
-        deleteSession: build.mutation<StatusResponse, string>({
-            query: (sessionId: string) => ({
-                url: `/${sessionId}?masterReward=1`,
-                method: "DELETE"
-            }),
-            invalidatesTags: [AllSessionsTag, SessionsCountTag]
-        })
-    }),
+	reducerPath: "sessionApi",
+	baseQuery: fetchBaseQuery({
+		baseUrl: `${process.env.REACT_APP_KAIRON_API_URL}/session`,
+		mode: "cors",
+		prepareHeaders: async (headers, api) => {
+			const {
+				auth: { jwt },
+			} = api.getState() as { auth: AuthState };
+			headers.set("Authorization", `Bearer ${jwt}`);
+			headers.set("Access-Control-Allow-Origin", "*");
+		},
+	}),
+	tagTypes: [SessionsTagType],
+	endpoints: (build) => ({
+		registerSession: build.mutation<StatusResponse, SessionRegistrationDto>({
+			query: (sessionRegistrationDto: SessionRegistrationDto) => ({
+				url: ``,
+				method: "POST",
+				body: JSON.stringify(sessionRegistrationDto),
+				headers: {
+					"Content-type": "application/json",
+					"Access-Control-Allow-Origin": "*"
+				}
+			}),
+			invalidatesTags: [AllSessionsTag, SessionsCountTag]
+		}),
+		getSessionsCount: build.query<CountDto, void>({
+			query: () => `/count`,
+			providesTags: [SessionsCountTag]
+		}),
+		getPaginatedSessions: build.query<PaginatedList<Session<Player>>, PaginatedRequestParams>({
+			query: (params: PaginatedRequestParams) =>
+				`?ts=${new Date().getTime()}${!!params.limit ? `&limit=${params.limit}`: ''}${!!params.nextAt ? `&nextAt=${params.nextAt}`: ''}`,
+			providesTags: [AllSessionsTag]
+		}),
+		getSessionsBetweenDates: build.query<Session<string>[], {from: number, to: number}>({
+			query: ({ from, to }) =>
+				`/inDates?ts=${new Date().getTime()}&from=${from}&to=${to}`,
+			providesTags: [AllSessionsTag]
+		}),
+		deleteSession: build.mutation<StatusResponse, string>({
+			query: (sessionId: string) => ({
+				url: `/${sessionId}?masterReward=1`,
+				method: "DELETE"
+			}),
+			invalidatesTags: [AllSessionsTag, SessionsCountTag]
+		})
+	}),
 });
 
-export const { 
-    useDeleteSessionMutation,
-    useGetPaginatedSessionsQuery,
-    useGetSessionsCountQuery,
-    useRegisterSessionMutation
+export const {
+	useDeleteSessionMutation,
+	useGetPaginatedSessionsQuery,
+	useLazyGetSessionsBetweenDatesQuery,
+	useGetSessionsCountQuery,
+	useRegisterSessionMutation
 } = sessionApi;
