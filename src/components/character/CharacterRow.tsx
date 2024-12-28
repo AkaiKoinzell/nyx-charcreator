@@ -6,6 +6,8 @@ import { FaHatWizard } from "react-icons/fa6";
 import {GiCloakDagger, GiMagicAxe, GiMagicSwirl, GiPunch} from "react-icons/gi";
 import {LuSwords} from "react-icons/lu";
 import {formatDate} from "../../utils/string-utils";
+import {useGetExpTableQuery} from "../../services/utilities";
+import {expToLevel} from "../../models/utils/ExpTable";
 
 interface CharacterRowProps {
 	character: Character<string>
@@ -14,6 +16,7 @@ interface CharacterRowProps {
 export const CharacterRow = ({ character }: CharacterRowProps) => {
 	const characterShortDescription = `${character.characterClass?.join("/") ?? "??"} ${character.race}`
 	const { data: token} = useGetCharacterTokenQuery(character.id)
+	const { data: expTable } = useGetExpTableQuery()
 	const defaultIcon = randomCharacterIcon()
 
 	return (
@@ -46,7 +49,7 @@ export const CharacterRow = ({ character }: CharacterRowProps) => {
 			</GridItem>
 			<GridItem>
 				<Stat>
-					<StatNumber>{exp(character)}</StatNumber>
+					<StatNumber>{expToLevel(expTable, exp(character)) ?? "Unknown"}</StatNumber>
 				</Stat>
 			</GridItem>
 			<GridItem>

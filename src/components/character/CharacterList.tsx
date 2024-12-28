@@ -1,4 +1,4 @@
-import {Container, Flex, Heading, HStack, SimpleGrid, Skeleton, useBreakpointValue, VStack} from "@chakra-ui/react";
+import {Container, Heading, SimpleGrid, Skeleton, useBreakpointValue, VStack} from "@chakra-ui/react";
 import { CharacterCard } from "./CharacterCard";
 import { Character } from "../../models/character/Character";
 import {Size} from "../form/controls/LabelInput";

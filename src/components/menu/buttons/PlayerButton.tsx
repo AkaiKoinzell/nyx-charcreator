@@ -1,10 +1,9 @@
 import {Button, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
 import {ChevronDownIcon} from "@chakra-ui/icons";
 import {Link} from "react-router-dom";
-import {hasRole} from "../../../utils/role-utils";
 import {Role} from "../../../utils/jwt-utils";
 
-export const PlayerButton = ({ roles, backgroundColor }: { roles: Role[], backgroundColor: string }) => {
+export const PlayerButton = ({ backgroundColor }: { roles: Role[], backgroundColor: string }) => {
 	return (
 		<Menu>
 			<MenuButton

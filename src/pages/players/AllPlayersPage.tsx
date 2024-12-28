@@ -79,7 +79,7 @@ export const AllPlayersPage = () => {
 			}
 			return 0
 		}))
-	}, [sortProperty])
+	}, [pTC, sortProperty])
 
 	useEffect(() => {
 		setIsTyping(true);
@@ -94,7 +94,7 @@ export const AllPlayersPage = () => {
 				setSortedPlayers([...players])
 			}
 			setIsTyping(false);
-		}, 300);
+		}, 200);
 
 		return () => clearTimeout(timeoutId)
 	}, [players, query])

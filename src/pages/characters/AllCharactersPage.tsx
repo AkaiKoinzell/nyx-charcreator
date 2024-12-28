@@ -12,15 +12,12 @@ import {
 	Text
 } from "@chakra-ui/react";
 import {CharacterRow} from "../../components/character/CharacterRow";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {Character, exp} from "../../models/character/Character";
 import {SearchIcon, TriangleDownIcon, TriangleUpIcon} from "@chakra-ui/icons";
 
 export const AllCharactersPage = () => {
 	const { data: characters } = useGetAllActiveCharactersQuery()
-	const playerToCharacters = useMemo(() => {
-
-	}, [])
 	const [sortedCharacters, setSortedCharacters] = useState<Character<string>[]>([])
 	const [sortProperty, setSortProperty] = useState<{ prop: string, dir: number } | undefined>(undefined)
 	const [isTyping, setIsTyping] = useState(false);

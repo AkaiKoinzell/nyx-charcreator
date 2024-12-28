@@ -1,4 +1,4 @@
-import { Character } from "../../models/character/Character";
+import {Character, exp} from "../../models/character/Character";
 import { Alert, AlertIcon, AlertTitle, Avatar, AvatarBadge, Button, FormControl, FormErrorMessage, HStack, Heading, Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SkeletonCircle, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { MdEdit } from "react-icons/md";
 import React, { useEffect, useState } from "react";
@@ -9,14 +9,17 @@ import { FaHatWizard } from "react-icons/fa6";
 import { LuSwords } from "react-icons/lu";
 import { GiCloakDagger, GiMagicAxe, GiMagicSwirl } from "react-icons/gi";
 import { FormValue } from "../../models/form/FormValue";
+import {useGetExpTableQuery} from "../../services/utilities";
+import {expToLevel} from "../../models/utils/ExpTable";
 
 export const CharacterInfo = ({ character }: { character: Character<string> }) => {
+	const { data: expTable } = useGetExpTableQuery()
 	return <>
 		<HStack>
 			<UploadableAvatar character={character} defaultIcon={randomCharacterIcon()}/>
 			<VStack>
 				<Heading size="lg">{character.name}</Heading>
-				<Text>{`${character.characterClass?.join("/") ?? "??"} ${character.race}`}</Text>
+				<Text>{`Lvl ${expToLevel(expTable, exp(character)) ?? "Unknown"} ${character.characterClass?.join("/") ?? "??"} ${character.race}`}</Text>
 			</VStack>
 		</HStack>
 	</>
@@ -99,11 +102,11 @@ const UploadBadge = ({ character, isOpen, onOpen, onClose }: UploadBadgeProps) =
 						{tokenFile.isValid && <Text mt={2}>File ready to upload: {tokenFile.value?.name}</Text>}
 					</FormControl>
 					{!!error &&
-                        <Alert status='error' marginBottom="1em" borderRadius="md">
-                            <AlertIcon />
-                            <AlertTitle>Something went wrong:</AlertTitle>
-                            <Text as="span">{JSON.stringify(error)}</Text>.
-                        </Alert>
+						<Alert status='error' marginBottom="1em" borderRadius="md">
+							<AlertIcon />
+							<AlertTitle>Something went wrong:</AlertTitle>
+							<Text as="span">{JSON.stringify(error)}</Text>.
+						</Alert>
 					}
 				</ModalBody>
 

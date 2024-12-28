@@ -1,10 +1,12 @@
 import {Avatar, Card, CardBody, CardHeader, Flex, Heading, Icon, Text} from "@chakra-ui/react";
-import { Character } from "../../models/character/Character";
+import {Character, exp} from "../../models/character/Character";
 import {useNavigate} from "react-router-dom";
 import {useCallback} from "react";
 import {useGetCharacterTokenQuery} from "../../services/character";
-import {FaHatWizard, FaPersonCane, FaSkull, FaStar, FaUser, FaUserShield} from "react-icons/fa6";
+import {FaHatWizard, FaPersonCane, FaSkull, FaStar, FaUserShield} from "react-icons/fa6";
 import {CharacterStatus} from "../../models/character/CharacterStatus";
+import {useGetExpTableQuery} from "../../services/utilities";
+import {expToLevel} from "../../models/utils/ExpTable";
 
 interface CharacterCardProps {
 	character: Character<string>
@@ -13,8 +15,9 @@ interface CharacterCardProps {
 
 export const CharacterCard = ({ character, linkToProfile }: CharacterCardProps) => {
 	const navigate = useNavigate()
-	const characterShortDescription = `${character.characterClass?.join("/") ?? "??"} ${character.race}`
 	const { data: token} = useGetCharacterTokenQuery(character.id)
+	const { data: expTable } = useGetExpTableQuery()
+	const characterShortDescription = `Lvl ${expToLevel(expTable, exp(character)) ?? "Unknown"} ${character.characterClass?.join("/") ?? "??"} ${character.race}`
 	const defaultIcon = <FaHatWizard fontSize="1.6em"/>
 
 	const handleNavigation = useCallback(() => {

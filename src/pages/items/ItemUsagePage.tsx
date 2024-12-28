@@ -66,7 +66,7 @@ export const ItemUsagePage = () => {
 			setOnlyActive(event.target.checked)
 			findUsage({ item: inputValue, onlyActive: event.target.checked })
 		},
-		[findUsage, inputValue, onlyActive]
+		[findUsage, inputValue]
 	)
 
 	useEffect(() => {

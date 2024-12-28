@@ -9,6 +9,7 @@ import { sessionApi } from "../services/session";
 import { itemApi } from "../services/item";
 import {recipesReducer} from "./recipes/recipes-slice";
 import {playerApi} from "../services/player";
+import {utilitiesApi} from "../services/utilities";
 
 
 export const store = configureStore({
@@ -21,7 +22,8 @@ export const store = configureStore({
 		[itemApi.reducerPath]: itemApi.reducer,
 		[labelApi.reducerPath]: labelApi.reducer,
 		[playerApi.reducerPath]: playerApi.reducer,
-		[sessionApi.reducerPath]: sessionApi.reducer
+		[sessionApi.reducerPath]: sessionApi.reducer,
+		[utilitiesApi.reducerPath]: utilitiesApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()
@@ -33,6 +35,7 @@ export const store = configureStore({
 			.concat(sessionApi.middleware)
 			.concat(itemApi.middleware)
 			.concat(playerApi.middleware)
+			.concat(utilitiesApi.middleware)
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
