@@ -46,6 +46,7 @@ const router = createBrowserRouter([
 					{ path: "update", element: <AddErrataPage /> },
 					{ path: "giveRandomItem", element: <GiveRandomItemPage /> },
 					{ path: "all", element: <AllCharactersPage /> },
+					{ path: "sheet", element: <CharacterSheetPage /> },
 				]
 			},
 			{
